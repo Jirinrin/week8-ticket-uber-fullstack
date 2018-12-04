@@ -21,13 +21,13 @@ export default class EventController {
   }
 
   /// voor admins!
-  @Authorized()
+  // @Authorized()
   @Post('/events')
   @HttpCode(201)
   async createEvent( @Body() body: Event,
                      /*@CurrentUser() user: User */) {
     /// gaat moeilijk worden te testen in httpie want niet echt mogelijk om date te passen en fk's moeten ook automatisch opgezet worden 
-    return body.save()
+    return body.save();
   }
 
   /// voor admins!

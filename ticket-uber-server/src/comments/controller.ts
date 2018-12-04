@@ -2,6 +2,7 @@ import { JsonController, Get, Param, Post, Delete, Body, HttpCode, Authorized, N
 import Comment from "./entity";
 import User from "../users/entity";
 import Ticket from "../tickets/entity";
+// import { updateFraudRisk } from "../fraudRiskAlgorithm";
 
 @JsonController()
 export default class CommentController {
@@ -24,6 +25,8 @@ export default class CommentController {
                        @CurrentUser() author: User ) {
     const ticket = await Ticket.findOne({eventId, id: ticketId});
     if (!ticket) throw new NotFoundError('Cannot find a ticket with that id or event');
+
+    // function stuff() {updateFraudRisk()}()
 
     return Comment.create({ content, ticket, author }).save();
   }
