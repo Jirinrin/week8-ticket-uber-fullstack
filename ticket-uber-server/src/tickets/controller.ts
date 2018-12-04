@@ -25,7 +25,7 @@ export default class TicketController {
   @Post('/events/:eventId/tickets')
   @HttpCode(201)
   async createTicket( @Param('eventId') eventId: number,
-                      @Body() {description, pictureUrl, price}: Partial<Ticket>,
+                      @Body() content: Partial<Ticket>,
                       @CurrentUser() author: User ) {
     const event = await Event.findOne({id: eventId});
     if (!event) throw new NotFoundError('Cannot find an event with that id');
@@ -35,7 +35,8 @@ export default class TicketController {
 
     return Ticket.create({
       /// denk dat dit goed gaat met picture url die ook null kan zijn?
-      description, pictureUrl, price, fraudRisk,
+      ...content,
+      fraudRisk,
       event, author
     }).save();
   }

@@ -1,6 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {addEvent} from '../actions/events';
+import {addEvent} from '../../actions/events';
 import EventForm from './EventForm';
 
 class EventAddContainer extends React.Component {
@@ -33,13 +33,6 @@ class EventAddContainer extends React.Component {
       endDate: this.state.endDate.toISOString()
     });
     this.props.handleEventAdded();
-    // this.setState({
-    //   name: '',
-    //   description: '',
-    //   imageUrl: '',
-    //   startDate: new Date(),
-    //   endDate: new Date()
-    // });
   }
 
   render() {

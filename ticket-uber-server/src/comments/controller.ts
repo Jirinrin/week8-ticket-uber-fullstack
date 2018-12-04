@@ -13,7 +13,7 @@ export default class CommentController {
     const ticket = await Ticket.findOne({eventId, id: ticketId});
     if (!ticket) throw new NotFoundError('Cannot find a ticket with that id or event');
 
-    return { comments: await Comment.find({ticketId})};
+    return { comments: await Comment.find({ticketId}).then(comments => comments.reverse())};
   }
 
   @Authorized()
@@ -23,10 +23,10 @@ export default class CommentController {
                        @Param('ticketId') ticketId: number,
                        @Body() {content}: Partial<Comment>,
                        @CurrentUser() author: User ) {
-    const ticket = await Ticket.findOne({eventId, id: ticketId});
+    const ticket = await Ticket.findOne({eventId, id: ticketId});  /// zou het fout gaan met dat eventId?
     if (!ticket) throw new NotFoundError('Cannot find a ticket with that id or event');
 
-    // function stuff() {updateFraudRisk()}()
+    // function stuff() {updateFraudRisk()}();
 
     return Comment.create({ content, ticket, author }).save();
   }

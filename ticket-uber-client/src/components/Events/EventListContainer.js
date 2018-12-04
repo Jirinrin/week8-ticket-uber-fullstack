@@ -1,6 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {loadEvents} from '../actions/events';
+import {loadEvents} from '../../actions/events';
 
 import EventList from './EventList';
 import EventAddContainer from './EventAddContainer';

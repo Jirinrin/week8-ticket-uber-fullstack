@@ -28,14 +28,28 @@ const eventAddSuccess = event => ({
   event
 });
 
-// hoe kan thunk weten dat je dit aan het doen bent? het is zeker omdat er geen data() voorkomt dus gaat kijken wat de function returnt ofzo
 export const addEvent = (data) => (dispatch, getState) => {
-  // const jwt = getState().currentUser;
-  console.log(data);
+  const jwt = getState().currentUser;
+  
   request
     .post(`${baseUrl}/events`)
-    // .set('Authorization', `Bearer ${jwt}`)
+    .set('Authorization', `Bearer ${jwt}`)
     .send(data)
     .then(response => dispatch(eventAddSuccess(response.body)))
-    .catch(error => console.log(error));
+    .catch(console.error);
+}
+
+
+export const EVENT_FETCHED = 'EVENT_FETCHED';
+
+const eventFetched = event => ({
+  type: EVENT_FETCHED,
+  event
+});
+
+export const loadEvent = eventId => (dispatch) => {
+  request
+    .get(`${baseUrl}/events/${eventId}`)
+    .then(response => dispatch(eventFetched(response.body.event)))
+    .catch(console.error);
 }
