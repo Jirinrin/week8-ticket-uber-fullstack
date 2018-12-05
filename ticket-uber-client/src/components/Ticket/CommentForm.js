@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function({commentText, onSubmit, onChange}) {
+const CommentForm = ({commentText, onSubmit, onChange}) => {
   return ( <form onSubmit={onSubmit}>
     <p>
       Write new comment: <br/>
@@ -9,3 +9,5 @@ export default function({commentText, onSubmit, onChange}) {
     <input type="submit" value="Post"></input>
   </form> );
 }
+ 
+export default CommentForm;

@@ -1,16 +1,29 @@
 import { JsonController, Get, Param, Post, Delete, Body, HttpCode, Authorized, NotFoundError, CurrentUser, /*UnauthorizedError, */Patch, QueryParam } from "routing-controllers";
 import Event from "./entity";
 import User from "../users/entity";
-import { MoreThan } from "typeorm";
+import { MoreThan, Raw } from "typeorm";
 
 @JsonController()
 export default class EventController {
   
   @Get('/events')
-  async getEvents( @QueryParam('pageSize') pageSize,
-                   @QueryParam('pageNo') pageNo ) {
+  async getEvents( @QueryParam('pageSize') pageSize: number,
+                   @QueryParam('pageNo') pageNo: number,
+                   @QueryParam('search') search: string,
+                   @QueryParam('filters') filters ) {
+    let formattedSearch = `"name"`;
+    console.log(search);
+    if (search.trim()[0]) search.replace(/\$\$/g, '$').split(' ').forEach((term: string, i) => {
+      formattedSearch = formattedSearch.concat(`${i === 0 ? ' AND (' : ' OR '}("name" LIKE $$%${term.trim()}%$$ OR "description" LIKE $$%${term.trim()}%$$)`);
+      if (i === search.trim().split(' ').length - 1) formattedSearch = formattedSearch.concat(')');
+    });
+
     return { events: await Event.find({
-      where: { endDate: MoreThan(new Date(new Date().setHours(0, 0, 0, 0)).toISOString()) },
+      where: { 
+        endDate: MoreThan(new Date(new Date().setHours(0, 0, 0, 0)).toISOString()),
+        // name: Raw(` "name" AND (("name" LIKE $$%Jiri%$$ OR "description" LIKE $$%Jiri%$$) OR ("name" LIKE $$%stuff%$$ OR "description" LIKE $$%stuff%$$)) `)
+        name: Raw(formattedSearch)
+      },
       take: pageSize,
       skip: pageNo * pageSize,
       select: ['id', 'name', 'imageUrl', 'startDate', 'endDate'],
