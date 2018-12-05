@@ -18,12 +18,14 @@ export default class Comment extends BaseEntity {
   @ManyToOne(type => Ticket, ticket => ticket.comments)
   ticket: Ticket;
   
-  @RelationId((comment: Comment) => comment.ticket)
-  ticketId: number;
+  // @Column('int', {nullable: true})
+  // @RelationId((comment: Comment) => comment.ticket)
+  // ticketId: number;
     
   @ManyToOne(type => User, user => user.comments)
   author: User;
     
+  // @Column('int', {nullable: true})
   @RelationId((comment: Comment) => comment.author)
   authorId: number;
 }

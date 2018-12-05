@@ -29,6 +29,7 @@ class TicketAddContainer extends React.Component {
   render() {
     return (<TicketForm onSubmit={this.onSubmit}
                         onChange={this.onChange}
+                        onCancel={this.props.handleTicketAdded}
                         onChangeDates={this.onChangeDates}
                         values={this.state} />);
   }

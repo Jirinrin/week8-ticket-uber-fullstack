@@ -5,6 +5,8 @@ const TicketDetails = ({ticket}) => {
   return ( <div>
     <h2> {ticket.price} </h2>
     <p> {ticket.description} </p>
+    <p> {ticket.createdAt} </p>
+    <p> Fraud risk: {ticket.fraudRisk}% </p>
   </div> );
 }
  

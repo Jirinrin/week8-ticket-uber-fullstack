@@ -16,37 +16,37 @@ export default class Ticket extends BaseEntity {
   @Column('text', {nullable: false})
   description: string;
 
-  /// werkt dit zo? met dat hij niet IsUrl() alsnog draait als het niet gesupplied wordt
   @IsUrl()
   @Column('text', {nullable: true})
   pictureUrl?: string;
 
   /// kijken of dit met scale zo werkt
   @IsNumber()
-  @Column('decimal', {nullable: false/*, scale: 2*/})
+  @Column('decimal', {nullable: false})
   price: number;
   
-  /// kijken of dit werkt met time without time zone uitlezen etc, en ook of het IsDateString() werkt
   @IsDateString()
-  @Column({type: 'time without time zone', nullable: false, default: 'NOW()'})
+  @Column({type: 'timestamp with time zone', nullable: false, default: 'NOW()'})
   createdAt?: string;
 
   @Min(0)
   @Max(100)
-  @Column('decimal', {nullable: true/*, scale: 2*/})
-  fraudRisk: number;
+  @Column('decimal', {nullable: true, default: 0})
+  fraudRisk?: number;
   
   /// calculate risk function gwn hier?? bijna niet mogelijk zeker
 
   @ManyToOne(type => Event, event => event.tickets)
   event: Event;
 
-  @RelationId((ticket: Ticket) => ticket.event)
+  // @Column({nullable: true})
+  @RelationId((ticket: Ticket) => ticket.event) /// kweeniet of je deze line nou wel of niet weg kan laten maar denk dat het wel chill is voor typeORM om te weten wat je aan het doen bent
   eventId: number;
 
   @ManyToOne(type => User, user => user.tickets)
   author: User;
 
+  // @Column('int', {nullable: true})
   @RelationId((ticket: Ticket) => ticket.author)
   authorId: number;
 

@@ -39,6 +39,7 @@ class EventAddContainer extends React.Component {
     return (<EventForm onSubmit={this.onSubmit}
                        onChange={this.onChange}
                        onChangeDates={this.onChangeDates}
+                       onCancel={this.props.handleEventAdded}
                        values={this.state} />);
   }
 }

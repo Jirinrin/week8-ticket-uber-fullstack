@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function({values, onSubmit, onChange}) {
+export default function({values, onSubmit, onChange, onCancel}) {
   return ( <form onSubmit={onSubmit}>
     <p>
       Price: <input type="text" name="price" value={values.price} onChange={onChange} /> <br/>
@@ -8,5 +8,6 @@ export default function({values, onSubmit, onChange}) {
       Picture: (input URL, optional) <input type="text" name="pictureUrl" value={values.pictureUrl} onChange={onChange} /> <br/>
     </p>
     <input type="submit" value="Save"></input>
+    <button onClick={onCancel}> Cancel </button>
   </form> );
 }

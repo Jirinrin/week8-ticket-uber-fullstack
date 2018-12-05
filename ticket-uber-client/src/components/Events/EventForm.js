@@ -2,7 +2,7 @@ import React from 'react';
 import DatePicker from 'react-date-picker';
 import './DatePicker.css';
 
-export default function({values, onSubmit, onChange, onChangeDates}) {
+export default function({values, onSubmit, onChange, onChangeDates, onCancel}) {
   return ( <form onSubmit={onSubmit}>
     <p>
       Name: <input type="text" name="name" value={values.name} onChange={onChange} /> <br/>
@@ -16,5 +16,6 @@ export default function({values, onSubmit, onChange, onChangeDates}) {
                 clearIcon={null} 
                 minDate={new Date()} /> <br/>
     <input type="submit" value="Save"></input>
+    <button onClick={onCancel}> Cancel </button>
   </form> );
 }

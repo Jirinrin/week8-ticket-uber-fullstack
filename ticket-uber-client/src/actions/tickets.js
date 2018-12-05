@@ -12,6 +12,7 @@ const ticketsFetched = tickets => ({
 
 export const loadTickets = (eventId) => (dispatch, getState) => {
   // if (getState().tickets) return;
+  console.log(eventId);
 
   request
     .get(`${baseUrl}/events/${eventId}/tickets`)

@@ -16,7 +16,6 @@ class TicketListContainer extends React.Component {
   componentDidMount() {
     this.props.loadTicket(this.props.match.params.eventId, this.props.match.params.id);
     this.props.loadComments(this.props.match.params.eventId, this.props.match.params.id);
-    console.log(this.props.history);
   }
 
   onChangeComment = (e) => {

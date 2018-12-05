@@ -2,6 +2,7 @@ import { JsonController, Get, Param, Post, Delete, Body, HttpCode, Authorized, N
 import Ticket from "./entity";
 import User from "../users/entity";
 import Event from "../events/entity";
+import { updateFraudRisks } from "../fraudRiskAlgorithm";
 
 @JsonController()
 export default class TicketController {
@@ -9,14 +10,16 @@ export default class TicketController {
   @Get('/events/:eventId/tickets')
   async getTickets( @Param('eventId') eventId: number ) {
     /// oke maar wil de columns eigenlijk filteren zodat hij hier alleen de belangrijkste info laat zien?
-    return { tickets: await Ticket.find({eventId})};
+    // return { tickets: (await Ticket.find({eventId})).reverse() };
+    return { tickets: await Ticket.find({relations: ['event'], where: {event: {id: eventId}}}).then(tickets => tickets.reverse()) };
   }
 
   @Get('/events/:eventId/tickets/:id')
   async getTicket( @Param('eventId') eventId: number,
                    @Param('id') id: number ) {
                                                  /// hoop dat dit werkt met via 'eventId' selecteren
-    const ticket = await Ticket.findOne({eventId, id});
+    // const ticket = await Ticket.findOne({eventId, id});
+    const ticket = await Ticket.findOne({relations: ['event'], where: {id, event: {id: eventId}}});
     if (!ticket) throw new NotFoundError('Cannot find a ticket with that id or event');
     return { ticket };
   }
@@ -30,15 +33,16 @@ export default class TicketController {
     const event = await Event.findOne({id: eventId});
     if (!event) throw new NotFoundError('Cannot find an event with that id');
 
-    /// bereken fraud-kans
-    const fraudRisk = 50;
-
-    return Ticket.create({
-      /// denk dat dit goed gaat met picture url die ook null kan zijn?
+    const newTicket = await Ticket.create({
       ...content,
-      fraudRisk,
       event, author
     }).save();
+
+    await updateFraudRisks(await Ticket.find({relations: ['event'], where: {event: {id: eventId}}}), 'event');
+    const authorTickets: Ticket[] = await Ticket.find({relations: ['author'], where: {author: {id: author.id}}});
+    if (authorTickets.length === 2) updateFraudRisks(authorTickets, 'author');
+
+    return Ticket.findOne({id: newTicket.id});
   }
 
   @Authorized()
@@ -47,11 +51,15 @@ export default class TicketController {
                    @Param('id') id: number, 
                    @Body() body: Partial<Ticket>,
                    @CurrentUser() user: User ) {
-    const ticket = await Ticket.findOne({eventId, id});
+    // const ticket = await Ticket.findOne({eventId, id});
+    const ticket = await Ticket.findOne({relations: ['event'], where: {id, event: {id: eventId}}});
     if (!ticket) throw new NotFoundError('Cannot find a ticket with that id or event');
     if (user.id !== ticket.authorId) throw new UnauthorizedError(`Cannot update a ticket that is not your own`);
 
-    return Ticket.merge(ticket, body).save();
+    const newTicket = await Ticket.merge(ticket, body).save();
+    if (body.price) await updateFraudRisks(await Ticket.find({relations: ['event'], where: {event: {id: eventId}}}), 'event');
+
+    return Ticket.findOne({id: newTicket.id});
   }
 
   @Authorized()
@@ -60,10 +68,18 @@ export default class TicketController {
   async deleteTicket( @Param('eventId') eventId: number,
                       @Param('id') id: number,
                       @CurrentUser() user: User ) {
-    const ticket = await Ticket.findOne({eventId, id});
+    // const ticket = await Ticket.findOne({eventId, id});
+    const ticket = await Ticket.findOne({relations: ['event'], where: {id, event: {id: eventId}}});
     if (!ticket) throw new NotFoundError('Cannot find a ticket with that id or event');
+    /// testen dat hij hier wel dat relation-id kan lezen
     if (user.id !== ticket.authorId) throw new UnauthorizedError(`Cannot delete a ticket that is not your own`);
     
-    return Ticket.delete(id);
+    await updateFraudRisks(await Ticket.find({relations: ['event'], where: {event: {id: eventId}}}), 'event');
+    const authorTickets: Ticket[] = await Ticket.find({relations: ['author'], where: {author: {id: user.id}}});
+    
+    const deleteResult = await Ticket.delete(id);
+    if (authorTickets.length === 1) updateFraudRisks(authorTickets, 'author');
+
+    return deleteResult;
   }
 }
