@@ -1,16 +1,20 @@
-import { JsonController, Get, Param, Post, Delete, Body, HttpCode, Authorized, NotFoundError, CurrentUser, /*UnauthorizedError, */Patch } from "routing-controllers";
+import { JsonController, Get, Param, Post, Delete, Body, HttpCode, Authorized, NotFoundError, CurrentUser, /*UnauthorizedError, */Patch, QueryParam } from "routing-controllers";
 import Event from "./entity";
 import User from "../users/entity";
+import { MoreThan } from "typeorm";
 
 @JsonController()
 export default class EventController {
   
   @Get('/events')
-  async getEvents() {
+  async getEvents( @QueryParam('pageSize') pageSize,
+                   @QueryParam('pageNo') pageNo ) {
     /// oke maar wil de columns eigenlijk filteren zodat hij hier alleen de belangrijkste info laat zien?
-    return { events: await Event.find() };
-    // const events = await Event.find();
-    // return {events};
+    return { events: await Event.find({
+      where: { endDate: MoreThan(new Date(new Date().setHours(0, 0, 0, 0)).toISOString()) },
+      take: pageSize,
+      skip: pageNo * pageSize
+    })};
   }
 
   @Get('/events/:id')
@@ -26,7 +30,6 @@ export default class EventController {
   @HttpCode(201)
   async createEvent( @Body() body: Event,
                      /*@CurrentUser() user: User */) {
-    /// gaat moeilijk worden te testen in httpie want niet echt mogelijk om date te passen en fk's moeten ook automatisch opgezet worden 
     return body.save();
   }
 

@@ -31,6 +31,8 @@ export default class CommentController {
 
     const newComment = await Comment.create({ content, ticket, author }).save();
 
+    /// dit spul kan efficienter je kan nml gwn relation-id voor 'comments' hebben in je Ticket entity zodat je direct uit kan lezen!
+    /// zelfde voor aantal tickets van author
     const commentCount = await Comment.find({relations: ['ticket'], where: {ticket: {id: ticketId}}});
     /// op dit soort momenten moet de server eigenlijk iets kunnen pushen naar de redux store...
     if (commentCount.length === 4) await updateFraudRisk(ticket);
