@@ -1,7 +1,7 @@
 /// alle double-quotes vervangen door enkele
 import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
 import Ticket from "../tickets/entity";
-import { IsString, IsUrl,/* IsDate,*/ MinLength } from "class-validator";
+import { IsString, IsUrl, MinLength } from "class-validator";
 
 /// iets met cascade on delete van de onetomany-dingen
 @Entity()
@@ -31,8 +31,8 @@ export default class Event extends BaseEntity {
   startDate: string;
 
   // /// validation dat niet eerder dan startdate
-  // // @IsDate()
   // // @MinDate(this.startDate as Date)
+  // @IsDate()
   @Column({type: 'timestamp with time zone', nullable: false})
   endDate: string;
 

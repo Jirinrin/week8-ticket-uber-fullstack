@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
-import {Link} from 'react-router-dom';
 import {logout} from '../actions/auth';
 
 class LoginLogoutButton extends Component {
@@ -9,7 +8,7 @@ class LoginLogoutButton extends Component {
       this.props.currentUser ?
       <button onClick={this.props.logout}> Log out </button>
       :
-      <Link to={'/login'}><button> Log in </button></Link>      
+      <button onClick={() => this.props.history.push('/login')}> Log in </button>
     )
   }
 }

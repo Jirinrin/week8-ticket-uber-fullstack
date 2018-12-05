@@ -1,0 +1,13 @@
+#ticket-list div {
+  padding: 10px;
+  margin: 5px;
+}
+
+em {
+  font-size: 13px;
+  line-height: 25px;
+}
+
+Link {
+  text-decoration: none;
+}

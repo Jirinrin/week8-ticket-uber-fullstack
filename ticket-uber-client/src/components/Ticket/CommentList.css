@@ -1,5 +1,10 @@
-.event-entry {
+.comment-entry {
   padding: 10px;
   margin: 5px;
   background-color: rgb(236, 236, 236);
+}
+
+em {
+  font-size: 13px;
+  line-height: 25px;
 }

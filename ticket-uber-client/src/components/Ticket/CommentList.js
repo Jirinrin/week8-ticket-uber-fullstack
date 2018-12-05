@@ -1,16 +1,17 @@
 import React from 'react';
+import './CommentList.css';
 
 export default function CommentList(props) {
   return ( <div>
     {props.comments ? 
-      <ul>
+      <div>
         {props.comments.map(comment => 
-          <li key={comment.id}>
-            {/* En auteur showen ofzo nog */}
+          <p className="comment-entry" key={comment.id}>
+            <em>{comment.author.firstName} {comment.author.lastName}: <br/></em>
             {comment.content}
-          </li>)}
+          </p>)}
           {!props.comments[0] && <p>No comments found</p>}
-      </ul> 
+      </div> 
     : 
     <p> Loading... </p>}
   </div> );

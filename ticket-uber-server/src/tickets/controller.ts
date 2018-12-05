@@ -14,7 +14,7 @@ export default class TicketController {
     return { tickets: await Ticket.find({
       relations: ['event', 'author'], /// ahhhh darnit hij laadt zoveel onnodige info in!!
       where: {event: {id: eventId}},
-      select: ['id', 'price', 'description', 'fraudRisk'],
+      select: ['id', 'price', 'description', 'fraudRisk', 'author'],
       order: {id: "DESC"},
       cache: true
     })};
@@ -44,6 +44,7 @@ export default class TicketController {
       event, author
     }).save();
 
+    ///  hij update ze wel maar wil dat hij ze dus ook life in de redux dinges update!
     await updateFraudRisks(await Ticket.find({relations: ['event'], where: {event: {id: eventId}}}), 'event');
     const authorTickets: Ticket[] = await Ticket.find({relations: ['author'], where: {author: {id: author.id}}});
     if (authorTickets.length === 2) updateFraudRisks(authorTickets, 'author');

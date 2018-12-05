@@ -34,6 +34,7 @@ class TicketListContainer extends React.Component {
 
       { this.props.ticket && <TicketDetails ticket={this.props.ticket} /> }
 
+      <h3>Comments</h3>
       { this.props.currentUser && <CommentForm onSubmit={this.onSubmitComment} 
                                                onChange={this.onChangeComment}
                                                commentText={this.state.commentText} /> }

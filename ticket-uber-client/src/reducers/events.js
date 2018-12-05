@@ -7,7 +7,7 @@ export default function reducer(state=null, action={}) {
     case EVENTS_FETCHED:
       return action.events;
     case EVENT_ADD_SUCCESS:
-      return [...state, action.event];
+      return [action.event, ...state];
     // case EVENT_DELETE_SUCCESS:
     //   return state.filter(event => event.id !== action.eventId);
     default:

@@ -4,6 +4,7 @@ import './EventList.css';
 
 export default function EventList(props) {
   return ( <div>
+    <h2> Events </h2>
     {props.events ? 
       <div>
         <div>
@@ -11,8 +12,8 @@ export default function EventList(props) {
             <div className="event-entry" key={event.id}>
               <Link to={`/events/${event.id}`}>
                 {event.name} <br/>
-                {event.imageUrl} <br/>
-                from {new Date(event.startDate).toDateString()} to {new Date(event.endDate).toDateString()}
+                <img src={event.imageUrl} alt={event.name} /> <br/>
+                {new Date(event.startDate).toDateString()} - {new Date(event.endDate).toDateString()}
               </Link>
             </div>)}
         </div>

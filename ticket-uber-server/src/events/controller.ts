@@ -14,6 +14,7 @@ export default class EventController {
       take: pageSize,
       skip: pageNo * pageSize,
       select: ['id', 'name', 'imageUrl', 'startDate', 'endDate'],
+      order: {startDate: 'ASC'},
       cache: true
     })};
   }
@@ -26,11 +27,12 @@ export default class EventController {
   }
 
   /// voor admins!
-  // @Authorized()
+  @Authorized()
   @Post('/events')
   @HttpCode(201)
   async createEvent( @Body() body: Event,
                      /*@CurrentUser() user: User */) {
+    // return Event.create(body).save();
     return body.save();
   }
 

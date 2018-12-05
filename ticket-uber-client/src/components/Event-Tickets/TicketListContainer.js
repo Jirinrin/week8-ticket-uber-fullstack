@@ -33,6 +33,7 @@ class TicketListContainer extends React.Component {
 
       {this.props.event && <EventDetails event={this.props.event} /> }
       
+      <h3> Tickets </h3>
       {(this.state.addTicket) ?
       <TicketAddContainer handleTicketAdded={this.handleTicketAdded} eventId={this.props.match.params.id} />
       :
