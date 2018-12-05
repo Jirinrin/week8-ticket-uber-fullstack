@@ -7,7 +7,6 @@ import {loadEvent} from '../../actions/events';
 import TicketList from './TicketList';
 import EventDetails from './EventDetails';
 import TicketAddContainer from './TicketAddContainer';
-// import TicketAddContainer from './TicketAddContainer';
 
 class TicketListContainer extends React.Component {
   state = {

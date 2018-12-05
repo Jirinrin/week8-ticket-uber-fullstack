@@ -28,7 +28,7 @@ const commentAddSuccess = comment => ({
 });
 
 export const addComment = (data, eventId, ticketId) => (dispatch, getState) => {
-  const jwt = getState().currentUser;
+  const jwt = getState().currentUser.jwt;
   
   request
     .post(`${baseUrl}/events/${eventId}/tickets/${ticketId}/comments`)

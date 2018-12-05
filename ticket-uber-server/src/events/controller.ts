@@ -39,12 +39,12 @@ export default class EventController {
   /// voor admins!
   @Authorized()
   @Patch('/events/:id')
-  async putEvent( @Param('id') id: number, 
-                  @Body() body: Partial<Event>,
-                  /*@CurrentUser() user: User*/ ) {
+  async patchEvent( @Param('id') id: number, 
+                    @Body() body: Partial<Event>,
+                    @CurrentUser() user: User ) {
     const event = await Event.findOne({id});
     if (!event) throw new NotFoundError('Cannot find an event with that id');
-    // else if (user.email !== event.email) throw new UnauthorizedError(`Cannot update a post that is not your own`);
+    // if (user.email !== event.email) throw new UnauthorizedError(`Cannot update a post that is not your own`);
 
     return Event.merge(event, body).save();
   }

@@ -49,7 +49,7 @@ export default class TicketController {
     const authorTickets: Ticket[] = await Ticket.find({relations: ['author'], where: {author: {id: author.id}}});
     if (authorTickets.length === 2) updateFraudRisks(authorTickets, 'author');
 
-    return Ticket.findOne({id: newTicket.id});
+    return Ticket.findOne({relations: ['author'], where: {id: newTicket.id}});
   }
 
   @Authorized()
@@ -66,7 +66,7 @@ export default class TicketController {
     const newTicket = await Ticket.merge(ticket, body).save();
     if (body.price) await updateFraudRisks(await Ticket.find({relations: ['event'], where: {event: {id: eventId}}}), 'event');
 
-    return Ticket.findOne({id: newTicket.id});
+    return Ticket.findOne({relations: ['author', 'event'], where: {id: newTicket.id}});
   }
 
   @Authorized()
@@ -79,14 +79,15 @@ export default class TicketController {
     const ticket = await Ticket.findOne({relations: ['event'], where: {id, event: {id: eventId}}});
     if (!ticket) throw new NotFoundError('Cannot find a ticket with that id or event');
     /// testen dat hij hier wel dat relation-id kan lezen
-    if (user.id !== ticket.authorId) throw new UnauthorizedError(`Cannot delete a ticket that is not your own`);
-    
-    await updateFraudRisks(await Ticket.find({relations: ['event'], where: {event: {id: eventId}}}), 'event');
-    const authorTickets: Ticket[] = await Ticket.find({relations: ['author'], where: {author: {id: user.id}}});
-    
-    const deleteResult = await Ticket.delete(id);
-    if (authorTickets.length === 1) updateFraudRisks(authorTickets, 'author');
+    // if (user.id !== ticket.authorId) throw new UnauthorizedError(`Cannot delete a ticket that is not your own`);
+        
+    // const deleteResult = await Ticket.delete(id);
 
-    return deleteResult;
+    // await updateFraudRisks(await Ticket.find({relations: ['event'], where: {event: {id: eventId}}}), 'event');
+    // const authorTickets: Ticket[] = await Ticket.find({relations: ['author'], where: {author: {id: user.id}}});
+    // if (authorTickets.length === 1) updateFraudRisks(authorTickets, 'author');
+    
+    // return deleteResult;
+    return (await Ticket.delete(id));
   }
 }

@@ -11,7 +11,7 @@ export default function TicketList(props) {
             <Link to={`/events/${props.eventId}/tickets/${ticket.id}`}>
               {ticket.price} <br/>
               {ticket.description.slice(0, 10) + '...'} <br/>
-              <em>{ticket.author.firstName} {ticket.author.lastName} </em>
+              {ticket.author && <em>{ticket.author.firstName} {ticket.author.lastName} </em>}
             </Link>
           </div>)}
           {!props.tickets[0] && <p>No tickets found</p>}

@@ -32,14 +32,14 @@ export default class Ticket extends BaseEntity {
   @Column('decimal', {nullable: true, default: 0})
   fraudRisk?: number;
 
-  @ManyToOne(type => Event, event => event.tickets)
+  @ManyToOne(type => Event, event => event.tickets, {onDelete: 'CASCADE'})
   event: Event;
 
   // @Column({nullable: true})
   @RelationId((ticket: Ticket) => ticket.event)
   eventId: number;
 
-  @ManyToOne(type => User, user => user.tickets)
+  @ManyToOne(type => User, user => user.tickets, {onDelete: 'CASCADE'})
   author: User;
 
   // @Column('int', {nullable: true})

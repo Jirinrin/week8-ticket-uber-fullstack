@@ -30,7 +30,7 @@ const eventAddSuccess = event => ({
 });
 
 export const addEvent = (data) => (dispatch, getState) => {
-  const jwt = getState().currentUser;
+  const jwt = getState().currentUser.jwt;
   
   request
     .post(`${baseUrl}/events`)

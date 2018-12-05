@@ -5,9 +5,9 @@ const baseUrl = 'http://localhost:4000';
 
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 
-const loginSuccess = (authentication) => ({
+const loginSuccess = (userPayload) => ({
   type: LOGIN_SUCCESS,
-  authentication
+  userPayload
 });
 
 export const login = (email, password) => (dispatch) => {

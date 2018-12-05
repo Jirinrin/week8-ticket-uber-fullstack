@@ -15,7 +15,7 @@ export default class Comment extends BaseEntity {
   @Column('text', {nullable: false})
   content: string;
 
-  @ManyToOne(type => Ticket, ticket => ticket.comments)
+  @ManyToOne(type => Ticket, ticket => ticket.comments, {onDelete: 'CASCADE'})
   ticket: Ticket;
   
   // @Column('int', {nullable: true})

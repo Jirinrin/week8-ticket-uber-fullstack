@@ -25,25 +25,7 @@ function Routes(props) {
       <Route exact path="/login" component={LoginFormContainer} />
       <Route exact path="/signup" component={SignUpFormContainer} />
     </Switch>
-    
-    {/* {!props.authenticated &&
-      <Switch>
-        <Route path="/login" component={LoginFormContainer} />
-        <Route path="" render={() => <Redirect to="/login" />} />
-      </Switch>}; */}
-
-    {/* {props.authenticated &&
-      <Switch>
-        <Route path="/" exact component={EventsListContainer} />
-        <Route path="/events/:id" component={EventDetailsContainer} />
-        <Route path="" render={() => <Redirect to="/" />} />
-      </Switch> }; */}
   </div>);
 }
 
-// const mapStateToProps = state => ({
-//   authenticated: !!state.currentUser
-// });
-
-// export default withRouter(connect(mapStateToProps)(Routes));
 export default withRouter(Routes);
