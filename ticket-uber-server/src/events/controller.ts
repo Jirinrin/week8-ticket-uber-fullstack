@@ -9,11 +9,12 @@ export default class EventController {
   @Get('/events')
   async getEvents( @QueryParam('pageSize') pageSize,
                    @QueryParam('pageNo') pageNo ) {
-    /// oke maar wil de columns eigenlijk filteren zodat hij hier alleen de belangrijkste info laat zien?
     return { events: await Event.find({
       where: { endDate: MoreThan(new Date(new Date().setHours(0, 0, 0, 0)).toISOString()) },
       take: pageSize,
-      skip: pageNo * pageSize
+      skip: pageNo * pageSize,
+      select: ['id', 'name', 'imageUrl', 'startDate', 'endDate'],
+      cache: true
     })};
   }
 

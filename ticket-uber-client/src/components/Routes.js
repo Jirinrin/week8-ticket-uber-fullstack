@@ -12,7 +12,11 @@ import TicketDetailsContainer from './Ticket/TicketDetailsContainer';
 
 function Routes(props) {
   return (<div>
-    <Route path="" component={LoginLogoutButton} />
+    <Switch>
+      <Route path="/login" />
+      <Route path="/signup" />
+      <Route path="" component={LoginLogoutButton} />
+    </Switch>
     <Switch>
       <Route exact path="/" render={() => <Redirect to="/events" />} />
       <Route exact path="/events" component={EventListContainer} />

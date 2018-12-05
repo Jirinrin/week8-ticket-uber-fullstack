@@ -9,9 +9,15 @@ export default class TicketController {
   
   @Get('/events/:eventId/tickets')
   async getTickets( @Param('eventId') eventId: number ) {
-    /// oke maar wil de columns eigenlijk filteren zodat hij hier alleen de belangrijkste info laat zien?
     // return { tickets: (await Ticket.find({eventId})).reverse() };
-    return { tickets: await Ticket.find({relations: ['event'], where: {event: {id: eventId}}}).then(tickets => tickets.reverse()) };
+    // return { tickets: await Ticket.find({relations: ['event'], where: {event: {id: eventId}}}).then(tickets => tickets.reverse()) };
+    return { tickets: await Ticket.find({
+      relations: ['event', 'author'], /// ahhhh darnit hij laadt zoveel onnodige info in!!
+      where: {event: {id: eventId}},
+      select: ['id', 'price', 'description', 'fraudRisk'],
+      order: {id: "DESC"},
+      cache: true
+    })};
   }
 
   @Get('/events/:eventId/tickets/:id')
@@ -19,7 +25,7 @@ export default class TicketController {
                    @Param('id') id: number ) {
                                                  /// hoop dat dit werkt met via 'eventId' selecteren
     // const ticket = await Ticket.findOne({eventId, id});
-    const ticket = await Ticket.findOne({relations: ['event'], where: {id, event: {id: eventId}}});
+    const ticket = await Ticket.findOne({relations: ['event', 'author'], where: {id, event: {id: eventId}}});
     if (!ticket) throw new NotFoundError('Cannot find a ticket with that id or event');
     return { ticket };
   }

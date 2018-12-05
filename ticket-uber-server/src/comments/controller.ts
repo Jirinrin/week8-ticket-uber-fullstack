@@ -15,7 +15,14 @@ export default class CommentController {
     if (!ticket) throw new NotFoundError('Cannot find a ticket with that id or event');
 
     // return { comments: await Comment.find({ticketId}).then(comments => comments.reverse())};
-    return { comments: await Comment.find({relations: ['ticket'], where: {ticket: {id: ticketId}}}).then(comments => comments.reverse()) };
+    // return { comments: await Comment.find({relations: ['ticket'], where: {ticket: {id: ticketId}}}).then(comments => comments.reverse()) };
+    return { comments: await Comment.find({
+      relations: ['ticket', 'author'],
+      where: {ticket: {id: ticketId}},
+      select: ['id', 'content', 'author'],
+      order: {id: "DESC"},
+      cache: true
+    })};
   }
 
   @Authorized()
