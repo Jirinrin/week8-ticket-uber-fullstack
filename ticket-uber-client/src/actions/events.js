@@ -11,12 +11,12 @@ const eventsFetched = events => ({
   events
 });
 
-export const loadEvents = (pageSize, pageNo, search='', filters={}) => (dispatch, getState) => {
+export const loadEvents = (pageSize, pageNo, search='', dateFilters=null) => (dispatch, getState) => {
   /// wil hier eigenlijk weer een soort intelligent caching systeem van maken...
-  
+  console.log(dateFilters);
   request
     .get(`${baseUrl}/events`)
-    .query({pageSize, pageNo, search, filters})
+    .query({pageSize, pageNo, search, dateFilters})
     .then(response => dispatch(eventsFetched(response.body.events)))
     .catch(console.error);
 }

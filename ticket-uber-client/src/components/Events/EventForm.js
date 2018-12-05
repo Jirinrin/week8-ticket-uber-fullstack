@@ -2,7 +2,7 @@ import React from 'react';
 import DatePicker from 'react-date-picker';
 import './DatePicker.css';
 
-export default function({values, onSubmit, onChange, onChangeDates, onCancel}) {
+const EventForm = ({values, onSubmit, onChange, onChangeDates, onCancel}) => {
   return ( <form onSubmit={onSubmit}>
     <p>
       Name: <input type="text" name="name" value={values.name} onChange={onChange} /> <br/>
@@ -19,3 +19,5 @@ export default function({values, onSubmit, onChange, onChangeDates, onCancel}) {
     <button onClick={onCancel}> Cancel </button>
   </form> );
 }
+ 
+export default EventForm;

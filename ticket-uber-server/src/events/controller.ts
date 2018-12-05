@@ -1,7 +1,7 @@
 import { JsonController, Get, Param, Post, Delete, Body, HttpCode, Authorized, NotFoundError, CurrentUser, /*UnauthorizedError, */Patch, QueryParam } from "routing-controllers";
 import Event from "./entity";
 import User from "../users/entity";
-import { MoreThan, Raw } from "typeorm";
+import { MoreThan, Raw, Between } from "typeorm";
 
 @JsonController()
 export default class EventController {
@@ -10,19 +10,30 @@ export default class EventController {
   async getEvents( @QueryParam('pageSize') pageSize: number,
                    @QueryParam('pageNo') pageNo: number,
                    @QueryParam('search') search: string,
-                   @QueryParam('filters') filters ) {
+                   @QueryParam('dateFilters') dateFilters: [string, string] ) {
+
     let formattedSearch = `"name"`;
-    console.log(search);
     if (search.trim()[0]) search.replace(/\$\$/g, '$').split(' ').forEach((term: string, i) => {
       formattedSearch = formattedSearch.concat(`${i === 0 ? ' AND (' : ' OR '}("name" LIKE $$%${term.trim()}%$$ OR "description" LIKE $$%${term.trim()}%$$)`);
       if (i === search.trim().split(' ').length - 1) formattedSearch = formattedSearch.concat(')');
     });
 
+    console.log(dateFilters);
+
+    let formattedFilters = {};
+    if (!dateFilters) {
+      formattedFilters['endDate'] = MoreThan(new Date(new Date().setHours(0, 0, 0, 0)).toISOString())
+    }
+    else {
+      formattedFilters['startDate'] = MoreThan(dateFilters[0]);
+      formattedFilters['endDate'] = Between(new Date(new Date().setHours(0, 0, 0, 0)).toISOString(),
+                                            dateFilters[1]);
+    }
+
     return { events: await Event.find({
       where: { 
-        endDate: MoreThan(new Date(new Date().setHours(0, 0, 0, 0)).toISOString()),
-        // name: Raw(` "name" AND (("name" LIKE $$%Jiri%$$ OR "description" LIKE $$%Jiri%$$) OR ("name" LIKE $$%stuff%$$ OR "description" LIKE $$%stuff%$$)) `)
-        name: Raw(formattedSearch)
+        name: Raw(formattedSearch),
+        ...formattedFilters
       },
       take: pageSize,
       skip: pageNo * pageSize,
