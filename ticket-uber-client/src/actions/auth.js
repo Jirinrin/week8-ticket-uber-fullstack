@@ -17,3 +17,10 @@ export const login = (email, password) => (dispatch) => {
     .then(response => dispatch(loginSuccess(response.body)))
     .catch(console.error);
 }
+
+
+export const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS';
+
+export const logout = () => {
+  return {type: LOGOUT_SUCCESS};
+}
