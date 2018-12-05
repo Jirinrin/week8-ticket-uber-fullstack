@@ -10,12 +10,12 @@ const ticketsFetched = tickets => ({
   tickets
 });
 
-export const loadTickets = (eventId) => (dispatch, getState) => {
-  // if (getState().tickets) return;
+export const loadTickets = (eventId, sortType, sortOrder) => (dispatch) => {
   console.log(eventId);
 
   request
     .get(`${baseUrl}/events/${eventId}/tickets`)
+    .query({sortType, sortOrder})
     .then(response => dispatch(ticketsFetched(response.body.tickets)))
     .catch(console.error);
 }

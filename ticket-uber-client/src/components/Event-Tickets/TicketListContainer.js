@@ -7,28 +7,44 @@ import {loadEvent} from '../../actions/events';
 import TicketList from './TicketList';
 import EventDetails from './EventDetails';
 import TicketAddContainer from './TicketAddContainer';
+import SortingForm from './SortingForm';
 
 class TicketListContainer extends React.Component {
   state = {
-    addTicket: false
+    addTicket: false,
+    sortType: 'id',
+    sortOrder: 'DESC'
   };
   
   componentDidMount() {
     this.props.loadEvent(this.props.match.params.id);
-    this.props.loadTickets(this.props.match.params.id);
+    this.props.loadTickets(this.props.match.params.id, this.state.sortType, this.state.sortOrder);
   }
 
-  handleTicketAddClick = () => {
-    this.setState({addTicket: true});
+  onChangeSortType = (e) => {
+    this.setState({sortType: e.target.value}, () => {
+      this.props.loadTickets(this.props.match.params.id, this.state.sortType, this.state.sortOrder);
+    });
   }
 
-  handleTicketAdded = () => {
-    this.setState({addTicket: false});
+  onToggleSortOrder = (e) => {
+    this.setState({sortOrder: this.state.sortOrder === 'DESC' ? 'ASC' : 'DESC'}, () => {
+      this.props.loadTickets(this.props.match.params.id, this.state.sortType, this.state.sortOrder);
+    });
   }
+
+  handleTicketAddClick = () => this.setState({addTicket: true});
+
+  handleTicketAdded = () => this.setState({addTicket: false});
 
   render() {
     return ( <div>
       <Link to="/"> {'<'} </Link>
+
+      <SortingForm sortType={this.state.sortType}
+                   onChangeSortType={this.onChangeSortType}
+                   sortOrder={this.state.sortOrder}
+                   onToggleSortOrder={this.onToggleSortOrder} />
 
       {this.props.event && <EventDetails event={this.props.event} /> }
       

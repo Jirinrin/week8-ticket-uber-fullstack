@@ -1,4 +1,4 @@
-import { JsonController, Get, Param, Post, Delete, Body, HttpCode, Authorized, NotFoundError, CurrentUser, UnauthorizedError, Patch } from "routing-controllers";
+import { JsonController, Get, Param, Post, Delete, Body, HttpCode, Authorized, NotFoundError, CurrentUser, UnauthorizedError, Patch, QueryParam } from "routing-controllers";
 import Ticket from "./entity";
 import User from "../users/entity";
 import Event from "../events/entity";
@@ -8,14 +8,16 @@ import { updateFraudRisks } from "../fraudRiskAlgorithm";
 export default class TicketController {
   
   @Get('/events/:eventId/tickets')
-  async getTickets( @Param('eventId') eventId: number ) {
+  async getTickets( @Param('eventId') eventId: number,
+                    @QueryParam('sortType') sortType: 'id'|'price'|'author',
+                    @QueryParam('sortOrder') sortOrder: 'ASC'|'DESC' ) {
     // return { tickets: (await Ticket.find({eventId})).reverse() };
     // return { tickets: await Ticket.find({relations: ['event'], where: {event: {id: eventId}}}).then(tickets => tickets.reverse()) };
     return { tickets: await Ticket.find({
       relations: ['event', 'author'], /// ahhhh darnit hij laadt zoveel onnodige info in!!
       where: {event: {id: eventId}},
       select: ['id', 'price', 'description', 'fraudRisk', 'author'],
-      order: {id: "DESC"},
+      order: {[sortType]: sortOrder},
       cache: true
     })};
   }
