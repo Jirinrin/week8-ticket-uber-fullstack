@@ -14,7 +14,7 @@ export default class EventController {
 
     let formattedSearch = `"name"`;
     if (search.trim()[0]) search.replace(/\$\$/g, '$').split(' ').forEach((term: string, i) => {
-      formattedSearch = formattedSearch.concat(`${i === 0 ? ' AND (' : ' OR '}("name" LIKE $$%${term.trim()}%$$ OR "description" LIKE $$%${term.trim()}%$$)`);
+      formattedSearch = formattedSearch.concat(`${i === 0 ? ' AND (' : ' OR '}("name" ILIKE $$%${term.trim()}%$$ OR "description" ILIKE $$%${term.trim()}%$$)`);
       if (i === search.trim().split(' ').length - 1) formattedSearch = formattedSearch.concat(')');
     });
 
