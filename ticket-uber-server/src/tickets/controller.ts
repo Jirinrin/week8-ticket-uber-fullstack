@@ -78,16 +78,17 @@ export default class TicketController {
     // const ticket = await Ticket.findOne({eventId, id});
     const ticket = await Ticket.findOne({relations: ['event'], where: {id, event: {id: eventId}}});
     if (!ticket) throw new NotFoundError('Cannot find a ticket with that id or event');
-    /// testen dat hij hier wel dat relation-id kan lezen
-    // if (user.id !== ticket.authorId) throw new UnauthorizedError(`Cannot delete a ticket that is not your own`);
-        
-    // const deleteResult = await Ticket.delete(id);
 
-    // await updateFraudRisks(await Ticket.find({relations: ['event'], where: {event: {id: eventId}}}), 'event');
-    // const authorTickets: Ticket[] = await Ticket.find({relations: ['author'], where: {author: {id: user.id}}});
-    // if (authorTickets.length === 1) updateFraudRisks(authorTickets, 'author');
+    console.log(ticket);
+    /// testen dat hij hier wel dat relation-id kan lezen
+    if (user.id !== ticket.authorId) throw new UnauthorizedError(`Cannot delete a ticket that is not your own`);
+        
+    const deleteResult = await Ticket.delete(id);
+
+    await updateFraudRisks(await Ticket.find({relations: ['event'], where: {event: {id: eventId}}}), 'event');
+    const authorTickets: Ticket[] = await Ticket.find({relations: ['author'], where: {author: {id: user.id}}});
+    if (authorTickets.length === 1) updateFraudRisks(authorTickets, 'author');
     
-    // return deleteResult;
-    return (await Ticket.delete(id));
+    return deleteResult;
   }
 }

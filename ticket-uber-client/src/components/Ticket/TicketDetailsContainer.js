@@ -25,7 +25,7 @@ class TicketListContainer extends React.Component {
   handleTicketEdited = () => this.setState({editTicket: false});
 
   onDeleteTicket = () => {
-    this.props.deleteTicket(this.props.match.params.eventId, this.props.match.params.id);
+    this.props.deleteTicket(this.props.match.params.eventId, this.props.match.params.id); /// gaat nog steeds fout
     this.props.history.push(`/events/${this.props.match.params.eventId}`);
   }
 
