@@ -1,18 +1,21 @@
 import React from 'react';
 import './CommentList.css';
 
-export default function CommentList(props) {
+const CommentList = ({comments, allowDeleteComments, onDeleteComment}) => {
   return ( <div>
-    {props.comments ? 
+    {comments ? 
       <div>
-        {props.comments.map(comment => 
+        {comments.map(comment => 
           <p className="comment-entry" key={comment.id}>
             <em>{comment.author.firstName} {comment.author.lastName}: <br/></em>
+            {allowDeleteComments && <button value={comment.id} onClick={onDeleteComment}>-</button>}
             {comment.content}
           </p>)}
-          {!props.comments[0] && <p>No comments found</p>}
+          {!comments[0] && <p>No comments found</p>}
       </div> 
     : 
     <p> Loading... </p>}
   </div> );
 }
+ 
+export default CommentList;

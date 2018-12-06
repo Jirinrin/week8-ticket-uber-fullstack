@@ -25,14 +25,13 @@ export default class TicketController {
   @Get('/events/:eventId/tickets/:id')
   async getTicket( @Param('eventId') eventId: number,
                    @Param('id') id: number ) {
-                                                 /// hoop dat dit werkt met via 'eventId' selecteren
     // const ticket = await Ticket.findOne({eventId, id});
     const ticket = await Ticket.findOne({relations: ['event', 'author'], where: {id, event: {id: eventId}}});
     if (!ticket) throw new NotFoundError('Cannot find a ticket with that id or event');
     return { ticket };
   }
 
-  @Authorized()
+  @Authorized(['admin', 'user'])
   @Post('/events/:eventId/tickets')
   @HttpCode(201)
   async createTicket( @Param('eventId') eventId: number,
@@ -54,7 +53,7 @@ export default class TicketController {
     return Ticket.findOne({relations: ['author'], where: {id: newTicket.id}});
   }
 
-  @Authorized()
+  @Authorized(['admin', 'user'])
   @Patch('/events/:eventId/tickets/:id')
   async putTicket( @Param('eventId') eventId: number,
                    @Param('id') id: number, 
@@ -63,7 +62,9 @@ export default class TicketController {
     // const ticket = await Ticket.findOne({eventId, id});
     const ticket = await Ticket.findOne({relations: ['event'], where: {id, event: {id: eventId}}});
     if (!ticket) throw new NotFoundError('Cannot find a ticket with that id or event');
-    if (user.id !== ticket.authorId) throw new UnauthorizedError(`Cannot update a ticket that is not your own`);
+    if (!(user.id === ticket.authorId || user.role === 'admin')) {
+      throw new UnauthorizedError(`Cannot update a ticket that is not your own`);
+    }
 
     const newTicket = await Ticket.merge(ticket, body).save();
     if (body.price) await updateFraudRisks(await Ticket.find({relations: ['event'], where: {event: {id: eventId}}}), 'event');
@@ -71,7 +72,7 @@ export default class TicketController {
     return Ticket.findOne({relations: ['author', 'event'], where: {id: newTicket.id}});
   }
 
-  @Authorized()
+  @Authorized(['admin', 'user'])
   @Delete('/events/:eventId/tickets/:id')
   @HttpCode(204)
   async deleteTicket( @Param('eventId') eventId: number,
@@ -80,11 +81,11 @@ export default class TicketController {
     // const ticket = await Ticket.findOne({eventId, id});
     const ticket = await Ticket.findOne({relations: ['event'], where: {id, event: {id: eventId}}});
     if (!ticket) throw new NotFoundError('Cannot find a ticket with that id or event');
-
-    console.log(ticket);
     /// testen dat hij hier wel dat relation-id kan lezen
-    if (user.id !== ticket.authorId) throw new UnauthorizedError(`Cannot delete a ticket that is not your own`);
-        
+    if (!(user.id === ticket.authorId || user.role === 'admin')) {
+      throw new UnauthorizedError(`Cannot delete a ticket that is not your own`);
+    }
+
     const deleteResult = await Ticket.delete(id);
 
     await updateFraudRisks(await Ticket.find({relations: ['event'], where: {event: {id: eventId}}}), 'event');

@@ -87,6 +87,6 @@ export const deleteTicket = (eventId, ticketId) => (dispatch, getState) => {
   request
     .delete(`${baseUrl}/events/${eventId}/tickets/${ticketId}`)
     .set('Authorization', `Bearer ${jwt}`)
-    .then(response => dispatch(ticketDeleted(ticketId)))
+    .then(_ => dispatch(ticketDeleted(ticketId)))
     .catch(console.error);
 }

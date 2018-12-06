@@ -1,15 +1,25 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {addEvent} from '../../actions/events';
-import EventForm from './EventForm';
+import {editEvent} from '../../actions/events';
+import EventForm from '../Events/EventForm';
 
-class EventAddContainer extends React.Component {
+class EventEditContainer extends React.Component {
   state = {
     name: '',
     description: '',
     imageUrl: '',
     startDate: new Date(),
     endDate: new Date()
+  }
+
+  componentDidMount() {
+    this.setState({
+      name: this.props.event.name,
+      description: this.props.event.description,
+      imageUrl: this.props.event.imageUrl || '',
+      startDate: new Date(this.props.event.startDate),
+      endDate: new Date(this.props.event.endDate)
+    });
   }
 
   onChange = (e) => {
@@ -27,22 +37,21 @@ class EventAddContainer extends React.Component {
 
   onSubmit = (e) => {
     e.preventDefault();
-    this.props.addEvent({
+    this.props.editEvent({
       ...this.state,
       startDate: this.state.startDate.toISOString(),
       endDate: this.state.endDate.toISOString()
-    });
-    this.props.handleEventAdded();
+    }, this.props.eventId);
+    this.props.handleEventEdited();
   }
 
-  /// wil eigenlijk dus weer directe feedback krijgen van als het bad request is dat hij ook weergeeft wat er fout is!
   render() {
     return (<EventForm onSubmit={this.onSubmit}
                        onChange={this.onChange}
                        onChangeDates={this.onChangeDates}
-                       onCancel={this.props.handleEventAdded}
+                       onCancel={this.props.handleEventEdited}
                        values={this.state} />);
   }
 }
 
-export default connect(null, {addEvent})(EventAddContainer);
+export default connect(null, {editEvent})(EventEditContainer);

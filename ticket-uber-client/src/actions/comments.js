@@ -11,8 +11,6 @@ const commentsFetched = comments => ({
 });
 
 export const loadComments = (eventId, ticketId) => (dispatch, getState) => {
-  // if (getState().comments) return;
-
   request
     .get(`${baseUrl}/events/${eventId}/tickets/${ticketId}/comments`)
     .then(response => dispatch(commentsFetched(response.body.comments)))
@@ -35,5 +33,23 @@ export const addComment = (data, eventId, ticketId) => (dispatch, getState) => {
     .set('Authorization', `Bearer ${jwt}`)
     .send(data)
     .then(response => dispatch(commentAddSuccess(response.body)))
+    .catch(console.error);
+}
+
+
+export const COMMENT_DELETE_SUCCESS = 'COMMENT_DELETE_SUCCESS';
+
+const commentDeleted = commentId => ({
+  type: COMMENT_DELETE_SUCCESS,
+  commentId
+});
+
+export const deleteComment = (eventId, ticketId, commentId) => (dispatch, getState) => {
+  const jwt = getState().currentUser.jwt;
+
+  request
+    .delete(`${baseUrl}/events/${eventId}/tickets/${ticketId}/comments/${commentId}`)
+    .set('Authorization', `Bearer ${jwt}`)
+    .then(_ => dispatch(commentDeleted(commentId)))
     .catch(console.error);
 }

@@ -1,16 +1,17 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {Link} from 'react-router-dom';
 import {loadTickets} from '../../actions/tickets';
-import {loadEvent} from '../../actions/events';
+import {loadEvent, deleteEvent} from '../../actions/events';
 
 import TicketList from './TicketList';
 import EventDetails from './EventDetails';
 import TicketAddContainer from './TicketAddContainer';
 import SortingForm from './SortingForm';
+import EventEditContainer from './EventEditContainer';
 
 class TicketListContainer extends React.Component {
   state = {
+    editEvent: false,
     addTicket: false,
     sortType: 'id',
     sortOrder: 'DESC'
@@ -33,32 +34,54 @@ class TicketListContainer extends React.Component {
     });
   }
 
+  handleEventEditClick = () => this.setState({editEvent: true});
+
+  handleEventEdited = () => this.setState({editEvent: false});
+
+  onDeleteEvent = () => {
+    this.props.deleteEvent(this.props.match.params.id);
+    this.props.history.push('/');
+  }
+
   handleTicketAddClick = () => this.setState({addTicket: true});
 
   handleTicketAdded = () => this.setState({addTicket: false});
 
   render() {
     return ( <div>
-      <Link to="/"> {'<'} </Link>
+      <button onClick={() => this.props.history.push('/')}> {'<'} </button>
+      
+      {this.state.editEvent ?
+      <EventEditContainer handleEventEdited={this.handleEventEdited} 
+                          eventId={this.props.match.params.id}
+                          event={this.props.event} />
+      :
+      <div>
+        {this.props.event && <EventDetails event={this.props.event} /> }
+        {this.props.admin && <button onClick={this.handleEventEditClick}>Edit event</button>}
+      </div> }
 
+      {this.props.admin && <button onClick={this.onDeleteEvent}>Delete event</button>}
+      
+      <h3> Tickets </h3>
       <SortingForm sortType={this.state.sortType}
                    onChangeSortType={this.onChangeSortType}
                    sortOrder={this.state.sortOrder}
                    onToggleSortOrder={this.onToggleSortOrder} />
 
-      {this.props.event && <EventDetails event={this.props.event} /> }
-      
-      <h3> Tickets </h3>
       {(this.state.addTicket) ?
       <TicketAddContainer handleTicketAdded={this.handleTicketAdded} eventId={this.props.match.params.id} />
       :
       (this.props.currentUser && <button onClick={this.handleTicketAddClick}>Add ticket</button>)}
 
-      <TicketList tickets={this.props.tickets} eventId={this.props.match.params.id} />
+      <TicketList tickets={this.props.tickets} eventId={this.props.match.params.id} history={this.props.history} />
     </div> )
   }
 }
 
-const mapStateToProps = ({tickets, event, currentUser}) => ({tickets, event, currentUser});
+const mapStateToProps = ({tickets, event, currentUser}) => ({
+  tickets, event, currentUser,
+  admin: currentUser && currentUser.role === 'admin',
+});
 
-export default connect(mapStateToProps, {loadTickets, loadEvent})(TicketListContainer);
+export default connect(mapStateToProps, {loadTickets, loadEvent, deleteEvent})(TicketListContainer);

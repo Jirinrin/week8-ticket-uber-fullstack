@@ -13,10 +13,12 @@ export default class EventController {
                    @QueryParam('dateFilters') dateFilters: [string, string] ) {
 
     let formattedSearch = `"name"`;
-    if (search.trim()[0]) search.replace(/\$\$/g, '$').split(' ').forEach((term: string, i) => {
-      formattedSearch = formattedSearch.concat(`${i === 0 ? ' AND (' : ' OR '}("name" ILIKE $$%${term.trim()}%$$ OR "description" ILIKE $$%${term.trim()}%$$)`);
-      if (i === search.trim().split(' ').length - 1) formattedSearch = formattedSearch.concat(')');
-    });
+    if (search.trim()[0]) {
+      search.replace(/\$\$/g, '').split(' ').forEach((term: string, i) => {
+        formattedSearch = formattedSearch.concat(`${i === 0 ? ' AND (' : ' AND '}("name" ILIKE $$%${term.trim()}%$$ OR "description" ILIKE $$%${term.trim()}%$$)`);
+      });
+      formattedSearch = formattedSearch.concat(')');
+    } 
 
     console.log(dateFilters);
 
@@ -51,7 +53,7 @@ export default class EventController {
   }
 
   /// voor admins!
-  @Authorized()
+  @Authorized(['admin'])
   @Post('/events')
   @HttpCode(201)
   async createEvent( @Body() body: Event,
@@ -61,7 +63,7 @@ export default class EventController {
   }
 
   /// voor admins!
-  @Authorized()
+  @Authorized(['admin'])
   @Patch('/events/:id')
   async patchEvent( @Param('id') id: number, 
                     @Body() body: Partial<Event>,
@@ -74,7 +76,7 @@ export default class EventController {
   }
 
   /// voor admins!
-  @Authorized()
+  @Authorized(['admin'])
   @Delete('/events/:id')
   @HttpCode(204)
   async deleteEvent( @Param('id') id: number,

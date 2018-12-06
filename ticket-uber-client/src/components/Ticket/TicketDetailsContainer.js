@@ -1,8 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {Link} from 'react-router-dom';
 import {loadTicket, deleteTicket} from '../../actions/tickets';
-import {loadComments, addComment} from '../../actions/comments';
+import {loadComments, addComment, deleteComment} from '../../actions/comments';
 
 import TicketDetails from './TicketDetails';
 import CommentForm from './CommentForm';
@@ -25,7 +24,7 @@ class TicketListContainer extends React.Component {
   handleTicketEdited = () => this.setState({editTicket: false});
 
   onDeleteTicket = () => {
-    this.props.deleteTicket(this.props.match.params.eventId, this.props.match.params.id); /// gaat nog steeds fout
+    this.props.deleteTicket(this.props.match.params.eventId, this.props.match.params.id);
     this.props.history.push(`/events/${this.props.match.params.eventId}`);
   }
 
@@ -39,11 +38,13 @@ class TicketListContainer extends React.Component {
     this.setState({commentText: ''});
   }
 
+  onDeleteComment = (e) => {
+    this.props.deleteComment(this.props.match.params.eventId, this.props.match.params.id, e.target.value);
+  }
+
   render() {
     return ( <div>
-      <Link to={`/events/${this.props.match.params.eventId}`}> {'<'} </Link>
-
-      {  }
+      <button onClick={() => this.props.history.push(`/events/${this.props.match.params.eventId}`)}> {'<'} </button>
 
       {this.state.editTicket ?
       <TicketEditContainer handleTicketEdited={this.handleTicketEdited} 
@@ -53,24 +54,27 @@ class TicketListContainer extends React.Component {
       :
       <div>
         {this.props.ticket && <TicketDetails ticket={this.props.ticket} />}
-        {this.props.authorOfTicket && <button onClick={this.handleTicketEditClick}>Edit ticket</button>}
+        {(this.props.authorOfTicket || this.props.admin) && 
+          <button onClick={this.handleTicketEditClick}>Edit ticket</button>}
       </div> }
 
-      { this.props.authorOfTicket && <button onClick={this.onDeleteTicket}>Delete ticket</button> }
+      {(this.props.authorOfTicket || this.props.admin) && 
+        <button onClick={this.onDeleteTicket}>Delete ticket</button>}
 
       <h3>Comments</h3>
       { this.props.currentUser && <CommentForm onSubmit={this.onSubmitComment} 
                                                onChange={this.onChangeComment}
                                                commentText={this.state.commentText} /> }
       
-      <CommentList comments={this.props.comments} eventId={this.props.match.params.eventId} ticketId={this.props.match.params.id} />
+      <CommentList comments={this.props.comments} allowDeleteComments={this.props.admin} onDeleteComment={this.onDeleteComment} />
     </div> );
   }
 }
 
 const mapStateToProps = ({ticket, comments, currentUser}) => ({
   ticket, comments, currentUser,
-  authorOfTicket: currentUser && ticket && currentUser.id === ticket.author.id
+  authorOfTicket: currentUser && ticket && currentUser.id === ticket.author.id,
+  admin: currentUser && currentUser.role === 'admin'
 });
 
-export default connect(mapStateToProps, {loadTicket, loadComments, addComment, deleteTicket})(TicketListContainer);
+export default connect(mapStateToProps, {loadTicket, loadComments, addComment, deleteTicket, deleteComment})(TicketListContainer);

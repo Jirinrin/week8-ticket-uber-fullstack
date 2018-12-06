@@ -25,7 +25,7 @@ export default class CommentController {
     })};
   }
 
-  @Authorized()
+  @Authorized(['admin', 'user'])
   @Post('/events/:eventId/tickets/:ticketId/comments')
   @HttpCode(201)
   async createComment( @Param('eventId') eventId: number,
@@ -48,7 +48,7 @@ export default class CommentController {
   }
 
   /// voor admin
-  @Authorized()
+  @Authorized(['admin'])
   @Delete('/events/:eventId/tickets/:ticketId/comments/:id')
   @HttpCode(204)
   async deleteComment( @Param('eventId') eventId: number,

@@ -1,5 +1,4 @@
 import React from 'react';
-import {Link} from 'react-router-dom';
 import './TicketList.css';
 
 export default function TicketList(props) {
@@ -7,12 +6,12 @@ export default function TicketList(props) {
     {props.tickets ? 
       <div id="ticket-list">
         {props.tickets.map(ticket => 
-          <div style={{backgroundColor: fraudRiskToColor(ticket.fraudRisk)}} key={ticket.id}>
-            <Link to={`/events/${props.eventId}/tickets/${ticket.id}`}>
+          <div className="ticket-entry" style={{backgroundColor: fraudRiskToColor(ticket.fraudRisk)}} key={ticket.id}>
+            <div onClick={() => props.history.push(`/events/${props.eventId}/tickets/${ticket.id}`)}>
               {ticket.price} <br/>
-              {ticket.description.slice(0, 10) + '...'} <br/>
+              {ticket.description.slice(0, 10) + (ticket.description.length >= 10 ? '...' : '')} <br/>
               {ticket.author && <em>{ticket.author.firstName} {ticket.author.lastName} </em>}
-            </Link>
+            </div>
           </div>)}
           {!props.tickets[0] && <p>No tickets found</p>}
       </div> 

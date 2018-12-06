@@ -1,6 +1,6 @@
 import {createKoaServer, Action} from 'routing-controllers';
 
-import {toUserId} from './auth/jwt';
+import {toUserInfo} from './auth/jwt';
 import setupDb from './db';
 import User from './users/entity';
 
@@ -21,19 +21,19 @@ const app = createKoaServer({
     UserController,
     LoginController
   ],
-  authorizationChecker: (action: Action): boolean => {
+  authorizationChecker: (action: Action, roles: string[]): boolean => {
     const header: string = action.request.headers.authorization;
 
     if (header && header.startsWith('Bearer ')) {
       const jwt = header.split(' ')[1];
-      return Boolean(jwt && toUserId(jwt));
+      return Boolean(jwt && roles.includes(toUserInfo(jwt).data.role));
     }
     return false;
   },
   currentUserChecker: async (action: Action): Promise<User|undefined> => {
     const jwt = action.request.headers.authorization.split(' ')[1];
     if (!jwt) return undefined;
-    return User.findOne({id: toUserId(jwt).data.id});
+    return User.findOne({id: toUserInfo(jwt).data.id});
   }
 });
 

@@ -12,7 +12,7 @@ export default class LoginController {
 
     if (!await user.verifyPassword(password!)) throw new BadRequestError('This combination of email and password is invalid');
 
-    const jwt = toJwt({ id: user.id! });
-    return { jwt, id: user.id };
+    const jwt = toJwt({ id: user.id!, role: user.role! });
+    return { jwt, id: user.id, role: user.role };
   }
 }

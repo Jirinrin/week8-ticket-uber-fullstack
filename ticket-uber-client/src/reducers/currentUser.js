@@ -5,7 +5,8 @@ export default function(state=null, action={}) {
     case LOGIN_SUCCESS:
       return {
         jwt: action.userPayload.jwt,
-        id: action.userPayload.id
+        id: action.userPayload.id,
+        role: action.userPayload.role
       };
     case LOGOUT_SUCCESS:
       return null;

@@ -44,7 +44,8 @@ function fraudRiskAlgorithm(ticketsOfAuthor: number, averagePrice: number, price
 }
 
 /// als de fraudRisk field nog niet null is ga dan intelligent doen... maar dat doen we gwn in de plek waar het gecalled wordt
-export async function updateFraudRisks(tickets: Ticket[], commonFeature: 'event'|'author'): Promise<Ticket[]> {
+export async function updateFraudRisks(tickets: Ticket[], commonFeature: 'event'|'author'): Promise<Ticket[]|void> {
+  if (!tickets[0]) return;
   switch (commonFeature) {
     case 'event':
       // const avgPrice = await Ticket.find({eventId: tickets[0].eventId}).then(getAveragePrice);

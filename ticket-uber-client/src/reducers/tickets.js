@@ -9,7 +9,7 @@ export default function reducer(state=null, action={}) {
     case TICKET_ADD_SUCCESS:
       return [action.ticket, ...state];
     case TICKET_DELETE_SUCCESS:
-      return state.filter(ticket => ticket.id !== Number(action.ticketId)); /// dit doet hij nog niet goed /// vgm doet hiji het nu!
+      return state.filter(ticket => ticket.id !== Number(action.ticketId));
     default:
       return state;
   }

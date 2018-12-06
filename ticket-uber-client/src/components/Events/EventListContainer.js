@@ -84,14 +84,14 @@ class EventsListContainer extends React.Component {
       {this.state.addEvent ?
       <EventAddContainer handleEventAdded={this.handleEventAdded} />
       :
-      (this.props.currentUser && <button onClick={this.handleEventAddClick}>Add event</button>)}
-      {/* dit met currentUser moet natuurlijk eigenlijk alleen als currentuser een admin is */}
+      (this.props.admin && <button onClick={this.handleEventAddClick}>Add event</button>)}
     </div> )
   }
 }
 
 const mapStateToProps = ({events, currentUser}) => ({
   events, currentUser,
+  admin: currentUser && currentUser.role === 'admin',
   nextPage: events && events.length >= PAGE_SIZE
 });
 

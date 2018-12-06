@@ -1,13 +1,16 @@
-#ticket-list div {
+.ticket-entry {
   padding: 10px;
   margin: 5px;
+  transition: filter ease 0.3s
+}
+
+.ticket-entry:hover {
+  filter: brightness(1.2);
+  transition: filter ease 0.3s;
+  cursor: pointer;
 }
 
 em {
   font-size: 13px;
   line-height: 25px;
-}
-
-Link {
-  text-decoration: none;
 }

@@ -1,6 +1,6 @@
 import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
 import Ticket from "../tickets/entity";
-import { IsEmail, MinLength, IsString } from "class-validator";
+import { IsEmail, MinLength, IsString, IsIn } from "class-validator";
 import { Exclude } from "class-transformer";
 import * as bcrypt from 'bcrypt';
 import Comment from "../comments/entity";
@@ -29,6 +29,11 @@ export default class User extends BaseEntity {
   @MinLength(1)
   @Column('varchar', {nullable: false})
   lastName: string;
+
+  @IsString()
+  @IsIn(['user', 'admin'])
+  @Column('varchar', {nullable: false})
+  role: 'user'|'admin';
 
   async setPassword(rawPassword: string) {
     const hash = await bcrypt.hash(rawPassword, 3);

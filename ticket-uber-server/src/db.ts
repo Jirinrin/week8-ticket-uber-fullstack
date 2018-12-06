@@ -8,6 +8,7 @@ import Event from './events/entity';
 import Ticket from './tickets/entity';
 import Comment from './comments/entity';
 import User from './users/entity';
+import AdminPass from './users/adminPassEntity';
 
 // This naming strategy was largely taken from the reader. 
 // It seems important that PostgreSQL has its naming stored in snake case
@@ -35,7 +36,8 @@ export default async () => createConnection({
       Event,
       Ticket,
       Comment,
-      User
+      User,
+      AdminPass
     ],
     synchronize: true,
     logging: true,
