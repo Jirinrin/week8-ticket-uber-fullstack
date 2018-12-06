@@ -5,7 +5,6 @@ import {connect} from 'react-redux';
 import LoginForm from './LoginForm';
 import {login} from '../../actions/auth';
 
-/// wil eigenlijk iets van feedback geven
 class LoginFormContainer extends Component {
   state = { email: '', password: '' };
 

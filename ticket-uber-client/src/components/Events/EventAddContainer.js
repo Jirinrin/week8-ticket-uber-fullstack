@@ -35,7 +35,6 @@ class EventAddContainer extends React.Component {
     this.props.handleEventAdded();
   }
 
-  /// wil eigenlijk dus weer directe feedback krijgen van als het bad request is dat hij ook weergeeft wat er fout is!
   render() {
     return (<EventForm onSubmit={this.onSubmit}
                        onChange={this.onChange}

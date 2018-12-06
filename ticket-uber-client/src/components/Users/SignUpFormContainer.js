@@ -3,7 +3,6 @@ import {connect} from 'react-redux';
 import SignUpForm from './SignUpForm';
 import {signUp} from '../../actions/users';
 
-/// wil eigenlijk iets van feedback geven als bepaalde fields niet correct ingevuld zijn... referentie van game-template ofzo
 class SignUpFormContainer extends Component {
   state = {
     userInfo: { email: '', password: '', firstName: '', lastName: '' },
