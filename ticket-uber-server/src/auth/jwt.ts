@@ -6,6 +6,7 @@ const expirationTime = 3600 * 2;
 interface JwtContents {
   id: number;
   role: 'user'|'admin';
+  name: string;
 }
 
 export const toJwt = (data: JwtContents): string =>

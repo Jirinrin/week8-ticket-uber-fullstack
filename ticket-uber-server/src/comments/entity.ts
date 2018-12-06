@@ -1,9 +1,8 @@
-import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, ManyToOne, RelationId } from "typeorm";
-import User from "../users/entity";
-import Ticket from "../tickets/entity";
-import { MinLength, IsString } from "class-validator";
+import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, ManyToOne, RelationId } from 'typeorm';
+import User from '../users/entity';
+import Ticket from '../tickets/entity';
+import { MinLength, IsString } from 'class-validator';
 
-/// validation nog stuffen
 @Entity()
 export default class Comment extends BaseEntity {
 

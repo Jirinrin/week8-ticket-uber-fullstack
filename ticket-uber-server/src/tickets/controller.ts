@@ -1,8 +1,8 @@
-import { JsonController, Get, Param, Post, Delete, Body, HttpCode, Authorized, NotFoundError, CurrentUser, UnauthorizedError, Patch, QueryParam } from "routing-controllers";
-import Ticket from "./entity";
-import User from "../users/entity";
-import Event from "../events/entity";
-import { updateFraudRisks } from "../fraudRiskAlgorithm";
+import { JsonController, Get, Param, Post, Delete, Body, HttpCode, Authorized, NotFoundError, CurrentUser, UnauthorizedError, Patch, QueryParam } from 'routing-controllers';
+import Ticket from './entity';
+import User from '../users/entity';
+import Event from '../events/entity';
+import { updateFraudRisks } from '../fraudRiskAlgorithm';
 
 @JsonController()
 export default class TicketController {
@@ -11,10 +11,9 @@ export default class TicketController {
   async getTickets( @Param('eventId') eventId: number,
                     @QueryParam('sortType') sortType: 'id'|'price'|'author',
                     @QueryParam('sortOrder') sortOrder: 'ASC'|'DESC' ) {
-    // return { tickets: (await Ticket.find({eventId})).reverse() };
-    // return { tickets: await Ticket.find({relations: ['event'], where: {event: {id: eventId}}}).then(tickets => tickets.reverse()) };
+    // Still looking for a way to not have to load in so much superfluous data of 'event' and 'author'...
     return { tickets: await Ticket.find({
-      relations: ['event', 'author'], /// ahhhh darnit hij laadt zoveel onnodige info in!!
+      relations: ['event', 'author'],
       where: {event: {id: eventId}},
       select: ['id', 'price', 'description', 'fraudRisk', 'author'],
       order: {[sortType]: sortOrder},
@@ -25,7 +24,6 @@ export default class TicketController {
   @Get('/events/:eventId/tickets/:id')
   async getTicket( @Param('eventId') eventId: number,
                    @Param('id') id: number ) {
-    // const ticket = await Ticket.findOne({eventId, id});
     const ticket = await Ticket.findOne({relations: ['event', 'author'], where: {id, event: {id: eventId}}});
     if (!ticket) throw new NotFoundError('Cannot find a ticket with that id or event');
     return { ticket };
@@ -45,21 +43,20 @@ export default class TicketController {
       event, author
     }).save();
 
-    ///  hij update ze wel maar wil dat hij ze dus ook life in de redux dinges update!
     await updateFraudRisks(await Ticket.find({relations: ['event'], where: {event: {id: eventId}}}), 'event');
-    const authorTickets: Ticket[] = await Ticket.find({relations: ['author'], where: {author: {id: author.id}}});
-    if (authorTickets.length === 2) updateFraudRisks(authorTickets, 'author');
+    if (author.ticketIds.length + 1 === 2) {
+      await updateFraudRisks(await Ticket.find({relations: ['author'], where: {author: {id: author.id}}}), 'author');
+    }
 
     return Ticket.findOne({relations: ['author'], where: {id: newTicket.id}});
   }
 
   @Authorized(['admin', 'user'])
   @Patch('/events/:eventId/tickets/:id')
-  async putTicket( @Param('eventId') eventId: number,
+  async patchTicket( @Param('eventId') eventId: number,
                    @Param('id') id: number, 
                    @Body() body: Partial<Ticket>,
                    @CurrentUser() user: User ) {
-    // const ticket = await Ticket.findOne({eventId, id});
     const ticket = await Ticket.findOne({relations: ['event'], where: {id, event: {id: eventId}}});
     if (!ticket) throw new NotFoundError('Cannot find a ticket with that id or event');
     if (!(user.id === ticket.authorId || user.role === 'admin')) {
@@ -78,10 +75,8 @@ export default class TicketController {
   async deleteTicket( @Param('eventId') eventId: number,
                       @Param('id') id: number,
                       @CurrentUser() user: User ) {
-    // const ticket = await Ticket.findOne({eventId, id});
     const ticket = await Ticket.findOne({relations: ['event'], where: {id, event: {id: eventId}}});
     if (!ticket) throw new NotFoundError('Cannot find a ticket with that id or event');
-    /// testen dat hij hier wel dat relation-id kan lezen
     if (!(user.id === ticket.authorId || user.role === 'admin')) {
       throw new UnauthorizedError(`Cannot delete a ticket that is not your own`);
     }
@@ -89,8 +84,9 @@ export default class TicketController {
     const deleteResult = await Ticket.delete(id);
 
     await updateFraudRisks(await Ticket.find({relations: ['event'], where: {event: {id: eventId}}}), 'event');
-    const authorTickets: Ticket[] = await Ticket.find({relations: ['author'], where: {author: {id: user.id}}});
-    if (authorTickets.length === 1) updateFraudRisks(authorTickets, 'author');
+    if (user.ticketIds.length - 1 === 1) {
+      updateFraudRisks(await Ticket.find({relations: ['author'], where: {author: {id: user.id}}}), 'author');
+    }
     
     return deleteResult;
   }

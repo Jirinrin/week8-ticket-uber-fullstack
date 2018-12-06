@@ -8,8 +8,15 @@ const LoginForm = (props) => {
         Password: <input type="password" name="password" onChange={props.onChange} value={props.values.password} />
         First name: <input type="text" name="firstName" onChange={props.onChange} value={props.values.firstName} />
         Last name: <input type="text" name="lastName" onChange={props.onChange} value={props.values.lastName} />
-        <input type="submit" name="submit" />
       </p>
+      <p>
+        <input type="checkbox" onChange={props.onCheckadmin} checked={props.showAdminPass} /> 
+        {props.showAdminPass ? 
+        <span>Admin password: <input type="password" name="adminPassword" onChange={props.onChangeAdminPass} value={props.adminPass}/></span>
+        :
+        <span>Register as admin?</span> }
+      </p>
+      <input type="submit" name="submit" />
     </form>
   </div> );
 }

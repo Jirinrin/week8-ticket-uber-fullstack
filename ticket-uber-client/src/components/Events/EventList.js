@@ -1,5 +1,4 @@
 import React from 'react';
-import {Link} from 'react-router-dom';
 import './EventList.css';
 
 export default function EventList(props) {
@@ -9,12 +8,10 @@ export default function EventList(props) {
       <div>
         <div>
           {props.events.map(event => 
-            <div className="event-entry" key={event.id}>
-              <Link to={`/events/${event.id}`}>
-                {event.name} <br/>
-                <img src={event.imageUrl} alt={event.name} /> <br/>
-                {new Date(event.startDate).toDateString()} - {new Date(event.endDate).toDateString()}
-              </Link>
+            <div className="event-entry" onClick={() => props.history.push(`/events/${event.id}`)} key={event.id}>
+              {event.name} <br/>
+              <img src={event.imageUrl} alt={event.name} /> <br/>
+              {new Date(event.startDate).toDateString()} - {new Date(event.endDate).toDateString()}
             </div>)}
         </div>
         {!props.events[0] && <p>No events found</p>}

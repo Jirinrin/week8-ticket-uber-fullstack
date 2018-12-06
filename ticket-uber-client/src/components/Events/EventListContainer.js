@@ -79,7 +79,8 @@ class EventsListContainer extends React.Component {
                  nextPage={this.props.nextPage}
                  prevPage={this.state.currentPage > 0}
                  onNextPage={this.onNextPage}
-                 onPrevPage={this.onPrevPage} />
+                 onPrevPage={this.onPrevPage}
+                 history={this.props.history} />
       
       {this.state.addEvent ?
       <EventAddContainer handleEventAdded={this.handleEventAdded} />

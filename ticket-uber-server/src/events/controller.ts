@@ -1,7 +1,7 @@
-import { JsonController, Get, Param, Post, Delete, Body, HttpCode, Authorized, NotFoundError, CurrentUser, /*UnauthorizedError, */Patch, QueryParam } from "routing-controllers";
-import Event from "./entity";
-import User from "../users/entity";
-import { MoreThan, Raw, Between } from "typeorm";
+import { JsonController, Get, Param, Post, Delete, Body, HttpCode, Authorized, NotFoundError, CurrentUser, /*UnauthorizedError, */Patch, QueryParam } from 'routing-controllers';
+import Event from './entity';
+import User from '../users/entity';
+import { MoreThan, Raw, Between } from 'typeorm';
 
 @JsonController()
 export default class EventController {
@@ -52,17 +52,13 @@ export default class EventController {
     return { event };
   }
 
-  /// voor admins!
   @Authorized(['admin'])
   @Post('/events')
   @HttpCode(201)
-  async createEvent( @Body() body: Event,
-                     /*@CurrentUser() user: User */) {
-    // return Event.create(body).save();
+  async createEvent( @Body() body: Event ) {
     return body.save();
   }
 
-  /// voor admins!
   @Authorized(['admin'])
   @Patch('/events/:id')
   async patchEvent( @Param('id') id: number, 
@@ -70,12 +66,10 @@ export default class EventController {
                     @CurrentUser() user: User ) {
     const event = await Event.findOne({id});
     if (!event) throw new NotFoundError('Cannot find an event with that id');
-    // if (user.email !== event.email) throw new UnauthorizedError(`Cannot update a post that is not your own`);
 
     return Event.merge(event, body).save();
   }
 
-  /// voor admins!
   @Authorized(['admin'])
   @Delete('/events/:id')
   @HttpCode(204)
@@ -83,7 +77,6 @@ export default class EventController {
                      @CurrentUser() user: User ) {
     const event = await Event.findOne({id});
     if (!event) throw new NotFoundError('Cannot find an event with that id');
-    // else if (user.email !== event.email) throw new UnauthorizedError(`Cannot delete a post that is not your own`);
     
     return Event.delete(id);
   }

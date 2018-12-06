@@ -12,6 +12,7 @@ import TicketDetailsContainer from './Ticket/TicketDetailsContainer';
 
 function Routes(props) {
   return (<div>
+    <Route path="" render={() => <button onClick={() => props.history.push('/')}>Home</button>} />
     <Switch>
       <Route path="/login" />
       <Route path="/signup" />

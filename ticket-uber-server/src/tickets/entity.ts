@@ -1,8 +1,8 @@
-import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, RelationId } from "typeorm";
+import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, RelationId } from 'typeorm';
 import Event from '../events/entity';
-import User from "../users/entity";
-import Comment from "../comments/entity";
-import { MinLength, IsUrl, IsNumber, IsString, IsDateString, Min, Max } from "class-validator";
+import User from '../users/entity';
+import Comment from '../comments/entity';
+import { MinLength, IsUrl, IsNumber, IsString, IsDateString, Min, Max } from 'class-validator';
 
 @Entity()
 export default class Ticket extends BaseEntity {
@@ -48,4 +48,7 @@ export default class Ticket extends BaseEntity {
 
   @OneToMany(type => Comment, comment => comment.ticket)
   comments: Comment[];
+
+  @RelationId((ticket: Ticket) => ticket.comments)
+  commentIds: number[];
 }

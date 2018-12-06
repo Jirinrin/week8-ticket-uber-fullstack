@@ -25,7 +25,7 @@ const commentAddSuccess = comment => ({
   comment
 });
 
-export const addComment = (data, eventId, ticketId) => (dispatch, getState) => {
+export const addComment = (data, eventId, ticketId, callback) => (dispatch, getState) => {
   const jwt = getState().currentUser.jwt;
   
   request
@@ -33,6 +33,7 @@ export const addComment = (data, eventId, ticketId) => (dispatch, getState) => {
     .set('Authorization', `Bearer ${jwt}`)
     .send(data)
     .then(response => dispatch(commentAddSuccess(response.body)))
+    .then(callback)
     .catch(console.error);
 }
 
@@ -44,12 +45,13 @@ const commentDeleted = commentId => ({
   commentId
 });
 
-export const deleteComment = (eventId, ticketId, commentId) => (dispatch, getState) => {
+export const deleteComment = (eventId, ticketId, commentId, callback) => (dispatch, getState) => {
   const jwt = getState().currentUser.jwt;
 
   request
     .delete(`${baseUrl}/events/${eventId}/tickets/${ticketId}/comments/${commentId}`)
     .set('Authorization', `Bearer ${jwt}`)
     .then(_ => dispatch(commentDeleted(commentId)))
+    .then(callback)
     .catch(console.error);
 }

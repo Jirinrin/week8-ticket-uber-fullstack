@@ -9,7 +9,7 @@ class App extends Component {
     return (
       <BrowserRouter>
         <Provider store={store}>
-          <Routes />
+          <Routes history={this.props.history} />
         </Provider>
       </BrowserRouter>
     );

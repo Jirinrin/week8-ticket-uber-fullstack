@@ -22,7 +22,7 @@ class TicketAddContainer extends React.Component {
       ...this.state,
       price: +this.state.price,
       pictureUrl: this.state.pictureUrl || null
-    }, this.props.eventId);
+    }, this.props.eventId, this.props.loadTickets);
     this.props.handleTicketAdded();
   }
 

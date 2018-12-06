@@ -1,6 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {loadTicket, deleteTicket} from '../../actions/tickets';
+import {loadTicket, deleteTicket, loadTickets} from '../../actions/tickets';
 import {loadComments, addComment, deleteComment} from '../../actions/comments';
 
 import TicketDetails from './TicketDetails';
@@ -24,7 +24,9 @@ class TicketListContainer extends React.Component {
   handleTicketEdited = () => this.setState({editTicket: false});
 
   onDeleteTicket = () => {
-    this.props.deleteTicket(this.props.match.params.eventId, this.props.match.params.id);
+    this.props.deleteTicket(this.props.match.params.eventId, 
+                            this.props.match.params.id,
+                            () => this.props.loadTickets(this.props.match.params.eventId));
     this.props.history.push(`/events/${this.props.match.params.eventId}`);
   }
 
@@ -34,12 +36,18 @@ class TicketListContainer extends React.Component {
 
   onSubmitComment = (e) => {
     e.preventDefault();
-    this.props.addComment({content: this.state.commentText}, this.props.match.params.eventId, this.props.match.params.id);
+    this.props.addComment({content: this.state.commentText}, 
+                           this.props.match.params.eventId, 
+                           this.props.match.params.id, 
+                           () => this.props.loadTicket(this.props.match.params.eventId, this.props.match.params.id));
     this.setState({commentText: ''});
   }
 
   onDeleteComment = (e) => {
-    this.props.deleteComment(this.props.match.params.eventId, this.props.match.params.id, e.target.value);
+    this.props.deleteComment(this.props.match.params.eventId, 
+                             this.props.match.params.id, 
+                             e.target.value,
+                             () => this.props.loadTicket(this.props.match.params.eventId, this.props.match.params.id));
   }
 
   render() {
@@ -77,4 +85,13 @@ const mapStateToProps = ({ticket, comments, currentUser}) => ({
   admin: currentUser && currentUser.role === 'admin'
 });
 
-export default connect(mapStateToProps, {loadTicket, loadComments, addComment, deleteTicket, deleteComment})(TicketListContainer);
+const mapDispatchToProps = {
+  loadTicket, 
+  loadComments, 
+  addComment, 
+  deleteTicket, 
+  deleteComment, 
+  loadTickets
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(TicketListContainer);

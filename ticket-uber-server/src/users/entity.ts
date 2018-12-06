@@ -1,9 +1,9 @@
-import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
-import Ticket from "../tickets/entity";
-import { IsEmail, MinLength, IsString, IsIn } from "class-validator";
-import { Exclude } from "class-transformer";
+import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, OneToMany, RelationId } from 'typeorm';
+import Ticket from '../tickets/entity';
+import { IsEmail, MinLength, IsString, IsIn } from 'class-validator';
+import { Exclude } from 'class-transformer';
 import * as bcrypt from 'bcrypt';
-import Comment from "../comments/entity";
+import Comment from '../comments/entity';
 
 @Entity()
 export default class User extends BaseEntity {
@@ -32,8 +32,8 @@ export default class User extends BaseEntity {
 
   @IsString()
   @IsIn(['user', 'admin'])
-  @Column('varchar', {nullable: false})
-  role: 'user'|'admin';
+  @Column('varchar', {nullable: false, default: 'user'})
+  role?: 'user'|'admin';
 
   async setPassword(rawPassword: string) {
     const hash = await bcrypt.hash(rawPassword, 3);
@@ -46,6 +46,9 @@ export default class User extends BaseEntity {
   
   @OneToMany(type => Ticket, ticket => ticket.author)
   tickets: Ticket[];
+
+  @RelationId((user: User) => user.tickets)
+  ticketIds: number[];
 
   @OneToMany(type => Comment, comment => comment.author)
   comments: Comment[];

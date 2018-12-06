@@ -1,4 +1,3 @@
-/// wil eigenlijk ook iets van author laten zien hier... toch eager loading? slash dan dus maar inbouwen in het GET ding dat je het geformat terugkrijgt
 import React from 'react';
 
 const TicketDetails = ({ticket}) => {

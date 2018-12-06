@@ -1,6 +1,6 @@
-import { BaseEntity, Entity, PrimaryGeneratedColumn, Column } from "typeorm";
-import { MinLength } from "class-validator";
-import { Exclude } from "class-transformer";
+import { BaseEntity, Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { MinLength } from 'class-validator';
+import { Exclude } from 'class-transformer';
 import * as bcrypt from 'bcrypt';
 
 // For the time being this will have to be set DIRECTLY via the source code of a controller or sth

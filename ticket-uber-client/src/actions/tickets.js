@@ -10,7 +10,7 @@ const ticketsFetched = tickets => ({
   tickets
 });
 
-export const loadTickets = (eventId, sortType, sortOrder) => (dispatch) => {
+export const loadTickets = (eventId, sortType='id', sortOrder='DESC') => (dispatch) => {
   console.log(eventId);
 
   request
@@ -28,7 +28,7 @@ const ticketAddSuccess = ticket => ({
   ticket
 });
 
-export const addTicket = (data, eventId) => (dispatch, getState) => {
+export const addTicket = (data, eventId, callback) => (dispatch, getState) => {
   const jwt = getState().currentUser.jwt;
   
   request
@@ -36,6 +36,7 @@ export const addTicket = (data, eventId) => (dispatch, getState) => {
     .set('Authorization', `Bearer ${jwt}`)
     .send(data)
     .then(response => dispatch(ticketAddSuccess(response.body)))
+    .then(callback)
     .catch(console.error);
 }
 
@@ -81,12 +82,13 @@ const ticketDeleted = ticketId => ({
   ticketId
 });
 
-export const deleteTicket = (eventId, ticketId) => (dispatch, getState) => {
+export const deleteTicket = (eventId, ticketId, callback) => (dispatch, getState) => {
   const jwt = getState().currentUser.jwt;
 
   request
     .delete(`${baseUrl}/events/${eventId}/tickets/${ticketId}`)
     .set('Authorization', `Bearer ${jwt}`)
     .then(_ => dispatch(ticketDeleted(ticketId)))
+    .then(callback)
     .catch(console.error);
 }

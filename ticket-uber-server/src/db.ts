@@ -16,12 +16,12 @@ import AdminPass from './users/adminPassEntity';
 class CustomNamingStrategy extends DefaultNamingStrategy implements NamingStrategyInterface {
 
   tableName(entityName: string, customName: string): string {
-    /// heb dit zomaar aangepast
+    // Simplified this expression, could be causing something to die
     return customName || snakeCase(entityName) + 's';
   }
 
   columnName(fieldName: string, customName: string, embeddedPrefixes: string[]): string {
-    return snakeCase(embeddedPrefixes.concat(customName || fieldName).join("_"));
+    return snakeCase(embeddedPrefixes.concat(customName || fieldName).join('_'));
   }
 
   columnNameCustomized = (customName: string): string => customName;
@@ -30,7 +30,7 @@ class CustomNamingStrategy extends DefaultNamingStrategy implements NamingStrate
 }
 
 export default async () => createConnection({
-    type: "postgres",
+    type: 'postgres',
     url: process.env.DATABASE_URL ||'postgres://postgres:secret@localhost:5432/postgres',
     entities: [
       Event,

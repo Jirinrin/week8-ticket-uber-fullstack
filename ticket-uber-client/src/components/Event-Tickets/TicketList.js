@@ -6,12 +6,13 @@ export default function TicketList(props) {
     {props.tickets ? 
       <div id="ticket-list">
         {props.tickets.map(ticket => 
-          <div className="ticket-entry" style={{backgroundColor: fraudRiskToColor(ticket.fraudRisk)}} key={ticket.id}>
-            <div onClick={() => props.history.push(`/events/${props.eventId}/tickets/${ticket.id}`)}>
-              {ticket.price} <br/>
-              {ticket.description.slice(0, 10) + (ticket.description.length >= 10 ? '...' : '')} <br/>
-              {ticket.author && <em>{ticket.author.firstName} {ticket.author.lastName} </em>}
-            </div>
+          <div className="ticket-entry" 
+               key={ticket.id}
+               style={{backgroundColor: fraudRiskToColor(ticket.fraudRisk)}}
+               onClick={() => props.history.push(`/events/${props.eventId}/tickets/${ticket.id}`)}>
+            {ticket.price} <br/>
+            {ticket.description.slice(0, 10) + (ticket.description.length >= 10 ? '...' : '')} <br/>
+            {ticket.author && <em>{ticket.author.firstName} {ticket.author.lastName} </em>}
           </div>)}
           {!props.tickets[0] && <p>No tickets found</p>}
       </div> 

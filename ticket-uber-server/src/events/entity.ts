@@ -1,9 +1,7 @@
-/// alle double-quotes vervangen door enkele
-import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
-import Ticket from "../tickets/entity";
-import { IsString, IsUrl, MinLength } from "class-validator";
+import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import Ticket from '../tickets/entity';
+import { IsString, IsUrl, MinLength } from 'class-validator';
 
-/// iets met cascade on delete van de onetomany-dingen
 @Entity()
 export default class Event extends BaseEntity {
 
@@ -25,14 +23,11 @@ export default class Event extends BaseEntity {
   @Column('text', {nullable: false})
   imageUrl: string;
 
-  /// kijken of dit met IsDate() werkt
-  // @IsDate()
   @Column({type: 'timestamp with time zone', nullable: false})
   startDate: string;
 
-  // /// validation dat niet eerder dan startdate
-  // // @MinDate(this.startDate as Date)
-  // @IsDate()
+  // Would like to add in-class validation to make sure the end date is greater than the start date...
+  // @MinDate(this.startDate as Date)
   @Column({type: 'timestamp with time zone', nullable: false})
   endDate: string;
 

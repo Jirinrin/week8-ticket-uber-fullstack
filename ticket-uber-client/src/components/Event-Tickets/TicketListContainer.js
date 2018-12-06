@@ -70,7 +70,9 @@ class TicketListContainer extends React.Component {
                    onToggleSortOrder={this.onToggleSortOrder} />
 
       {(this.state.addTicket) ?
-      <TicketAddContainer handleTicketAdded={this.handleTicketAdded} eventId={this.props.match.params.id} />
+      <TicketAddContainer handleTicketAdded={this.handleTicketAdded} 
+                          eventId={this.props.match.params.id}
+                          loadTickets={() => this.props.loadTickets(this.props.match.params.id, this.state.sortType, this.state.sortOrder)} />
       :
       (this.props.currentUser && <button onClick={this.handleTicketAddClick}>Add ticket</button>)}
 

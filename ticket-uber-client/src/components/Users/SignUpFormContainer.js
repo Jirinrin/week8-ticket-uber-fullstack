@@ -8,13 +8,23 @@ class SignUpFormContainer extends Component {
   state = {
     userInfo: { email: '', password: '', firstName: '', lastName: '' },
     showAdminPass: false,
-    adminPass: ''
+    adminPass: '',
+    errorInfo: []
   };
 
   onSubmit = (e) => {
     e.preventDefault();
-    this.props.signUp(this.state.userInfo, this.state.showAdminPass ? this.state.adminPass : null);
-    this.props.history.push('/login');
+    this.props.signUp(this.state.userInfo,
+                      this.state.showAdminPass ? this.state.adminPass : null,
+                      () => this.props.history.push('/login'),
+                      (error) => {
+                        if (JSON.parse(error.response.text).message.includes(`check 'errors' property for more info`)) {
+                          this.setState({
+                            errorInfo: JSON.parse(error.response.text).errors.map(error => Object.values(error.constraints))
+                          });
+                        }
+                        else this.setState({errorInfo: [JSON.parse(error.response.text).message]});
+                      });
   }
 
   onChange = (e) => {
@@ -35,17 +45,14 @@ class SignUpFormContainer extends Component {
     
     return ( <div>
       <button onClick={() => this.props.history.go(-2)}> x </button>
-      <SignUpForm onSubmit={this.onSubmit} onChange={this.onChange} values={this.state} />
-
-      {/* wil dit stuk eigenlijk gwn erbij in de signupform maar goed */}
-      <p>
-        <input type="checkbox" onChange={this.onCheckadmin} checked={this.state.showAdminPass} /> 
-        {this.state.showAdminPass ? 
-        <span>Admin password: <input type="password" name="adminPassword" onChange={this.onChangeAdminPass} value={this.state.adminPass}/></span>
-        :
-        <span>Register as admin?</span> }
-        
-      </p>
+      <SignUpForm onSubmit={this.onSubmit} 
+                  onChange={this.onChange} 
+                  values={this.state}
+                  showAdminPass={this.state.showAdminPass}
+                  adminPass={this.state.adminPass}
+                  onChangeAdminPass={this.onChangeAdminPass}
+                  onCheckadmin={this.onCheckadmin} />
+      <p>{this.state.errorInfo.map(error => <span key={error}>{error} <br/></span>)}</p>
     </div> );
   }
 }

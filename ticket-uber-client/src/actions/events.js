@@ -1,6 +1,5 @@
 import request from 'superagent';
 
-/// dit is twijfelachtig want wat als het andere url is???
 const baseUrl = 'http://localhost:4000';
 
 
@@ -12,7 +11,6 @@ const eventsFetched = events => ({
 });
 
 export const loadEvents = (pageSize, pageNo, search='', dateFilters=null) => (dispatch, getState) => {
-  /// wil hier eigenlijk weer een soort intelligent caching systeem van maken...
   request
     .get(`${baseUrl}/events`)
     .query({pageSize, pageNo, search, dateFilters})
