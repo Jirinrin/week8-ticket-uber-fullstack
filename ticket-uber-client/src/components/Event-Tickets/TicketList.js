@@ -10,7 +10,7 @@ export default function TicketList(props) {
                key={ticket.id}
                style={{backgroundColor: fraudRiskToColor(ticket.fraudRisk)}}
                onClick={() => props.history.push(`/events/${props.eventId}/tickets/${ticket.id}`)}>
-            {ticket.price} <br/>
+            €{parseFloat(ticket.price).toFixed(2)} <br/>
             {ticket.description.slice(0, 10) + (ticket.description.length >= 10 ? '...' : '')} <br/>
             {ticket.author && <em>{ticket.author.firstName} {ticket.author.lastName} </em>}
           </div>)}
