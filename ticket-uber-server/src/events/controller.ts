@@ -20,8 +20,6 @@ export default class EventController {
       formattedSearch = formattedSearch.concat(')');
     } 
 
-    console.log(dateFilters);
-
     let formattedFilters = {};
     if (!dateFilters) {
       formattedFilters['endDate'] = MoreThan(new Date(new Date().setHours(0, 0, 0, 0)).toISOString())

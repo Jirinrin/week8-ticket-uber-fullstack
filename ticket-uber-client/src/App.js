@@ -17,11 +17,3 @@ class App extends Component {
 }
 
 export default App;
-
-// ReactDOM.render( <div>
-//     <BrowserRouter>
-//       <App />
-//     </BrowserRouter>
-//   </div>,
-//   document.getElementById('root')
-// );

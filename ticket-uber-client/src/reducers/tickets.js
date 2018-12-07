@@ -1,6 +1,5 @@
 import {TICKETS_FETCHED} from '../actions/tickets';
 import {TICKET_ADD_SUCCESS, TICKET_DELETE_SUCCESS} from '../actions/tickets';
-// import {TICKET_DELETE_SUCCESS} from '../actions/tickets';
 
 export default function reducer(state=null, action={}) {
   switch (action.type) {

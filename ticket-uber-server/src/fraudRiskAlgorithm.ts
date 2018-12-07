@@ -64,8 +64,6 @@ export async function updateFraudRisk(ticket: Ticket, avgPriceInherit?: number, 
   await Promise.all(queries)
           .catch(e => {throw new BadRequestError(e)});
 
-  console.log(authorTickets, ticketComments, avgPrice);
-
   if (authorTickets === null || ticketComments === null || avgPrice === null) {
     throw new NotFoundError('Cannot find certain information related to the ticket you are trying to update');
   }

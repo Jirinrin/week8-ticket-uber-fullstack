@@ -11,7 +11,6 @@ class LoginFormContainer extends Component {
   onSubmit = (e) => {
     e.preventDefault();
     this.props.login(this.state.email, this.state.password);
-    console.log(this.props.history);
   }
 
   onChange = (e) => {

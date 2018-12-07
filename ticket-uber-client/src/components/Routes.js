@@ -1,7 +1,6 @@
 import React from 'react';
 import {Switch, Route, Redirect} from 'react-router-dom';
 import {withRouter} from 'react-router';
-// import {connect} from 'react-redux';
 
 import EventListContainer from './Events/EventListContainer';
 import TicketListContainer from './Event-Tickets/TicketListContainer';

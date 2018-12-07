@@ -10,7 +10,6 @@ export default class CommentController {
   @Get('/events/:eventId/tickets/:ticketId/comments')
   async getComments( @Param('eventId') eventId: number,
                      @Param('ticketId') ticketId: number ) {
-    // const ticket = await Ticket.findOne({eventId, id: ticketId});
     const ticket = await Ticket.findOne({relations: ['event'], where: {id: ticketId, event: {id: eventId}}});
     if (!ticket) throw new NotFoundError('Cannot find a ticket with that id or event');
 
@@ -47,7 +46,6 @@ export default class CommentController {
                        @Param('ticketId') ticketId: number,
                        @Param('id') id: number,
                        @CurrentUser() user: User ) {
-    // const ticket = await Ticket.findOne({eventId, id: ticketId});
     const ticket = await Ticket.findOne({relations: ['event'], where: {id: ticketId, event: {id: eventId}}});
     if (!ticket) throw new NotFoundError('Cannot find a ticket with that id or event');
     

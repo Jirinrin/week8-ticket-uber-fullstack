@@ -11,8 +11,6 @@ const ticketsFetched = tickets => ({
 });
 
 export const loadTickets = (eventId, sortType='id', sortOrder='DESC') => (dispatch) => {
-  console.log(eventId);
-
   request
     .get(`${baseUrl}/events/${eventId}/tickets`)
     .query({sortType, sortOrder})
